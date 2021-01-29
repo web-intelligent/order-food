@@ -17,9 +17,25 @@ get_header();
                     }
                 ?>    
             </ul>
+            <div class="open-mobile-menu-order-food"><i class="fas fa-bars"></i> Меню</div>
+            <ul class="order-food-mobile-menu">
+                <?php 
+                    $terms = get_terms( 'order_food_category' );
+                    if( $terms && ! is_wp_error($terms) ){
+                        foreach( $terms as $term ){
+                            echo '<li><a href="' . get_term_link( $term ) . '">'. $term->name .'</a></li>'; 
+                        }
+                    }
+                ?>
+            </ul>
         </div>
     </div>
 </div>
+<?php
+        add_filter( 'get_the_archive_title', function( $title ){
+        return preg_replace('~^[^:]+: ~', '', $title );
+    });
+?>
 <div class="container mt-5">
             <div class="row">
                 <div class="col-sm-12 col-md-12 col-lg-9">
@@ -122,15 +138,10 @@ get_header();
                                 </div>
                             </div>
                         </div>
-                        <br>
-                        <br>
-                        <br>
-                        <br>
-                        <br>
-                        <br>
-                        <br>
-                        <br>
-                        <br>
+                    </aside>
+                    <aside class="order-sidebar-mobile">
+                        <div class="open-mobile-menu-order-food"><i class="fas fa-bars"></i> Меню</div>
+                        <a href="#" class="mobile-basket"><i class="fas fa-shopping-basket"></i> 350 <i class="fas fa-ruble-sign"></i></a>
                     </aside>
                 </div>
             </div>
@@ -158,6 +169,62 @@ get_header();
 .active_menu_item {
     border-bottom: 3px solid #f27b2c;
     padding-bottom: 12px;
+}
+.open-mobile-menu-order-food {
+    color:#fff;
+    cursor:pointer;
+}
+.mobile-basket {
+    color:#fff;
+    text-decoration:none;
+}
+.mobile-basket:hover {
+    color:#fff;
+}
+.open-mobile-menu-order-food i {
+    margin-right:10px;
+    margin-top:2px;
+}
+.order-food-mobile-menu {
+    display:none;
+    position:fixed;
+    background:rgba(0,0,0,0.8);
+    bottom:-100%;
+    left:0%;
+    width: 100%;
+    height:100%;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+    z-index: 2000;
+    transition:0.2s ease-in-out;
+}
+.order-food-mobile-menu-active {
+    bottom:0;
+}
+.order-food-mobile-menu li {
+    list-style:none;
+    width:100%;
+}
+.order-food-mobile-menu li a {
+    display:block;
+    width:80%;
+    border-bottom: 1px solid #f27b2c;
+    padding:10px 0;
+    color:#fff;
+    text-decoration:none;
+    text-transform:uppercase
+}
+@media screen and (max-width: 991px) {
+    .order-food-mobile-menu {
+        display:flex;
+    }
+    .open-mobile-menu-order-food {
+        display:flex;
+    }
+    .menu {
+        display:none;
+    }
 }
 .product-img-in-loop {
     width: 100%;
@@ -252,6 +319,26 @@ get_header();
     font-weight: bold;
 }
 /* Sidebar */
+.order-sidebar-mobile {
+    display:none;
+    position:fixed;
+    bottom:0;
+    background:#f27b2c;
+    justify-content:space-around;
+    align-items:center;
+    padding:10px 0;
+    width:100%;
+    z-index:2000;
+    left:0;
+}
+@media screen and (max-width: 991px) {
+    .order-sidebar-mobile {
+        display:flex;
+    }
+    .order-sidebar {
+        display:none;
+    }
+}
 .order-sidebar {
     background: #d5d5d5;
     padding: 10px;
@@ -332,11 +419,21 @@ get_header();
 
     let productName = jQuery('.product-header h2');
 
-    console.log(productName);
-
     jQuery('.product-img-in-loop').click(function(){
         jQuery(this).parent().toggleClass('flex-content');
         jQuery(this).toggleClass('full-width-product-img');
+    });
+
+    var curent_link = jQuery(location).attr('href');
+
+    jQuery('.menu').find('a').each(function() {
+        if(jQuery(this).attr('href') == curent_link) {
+            jQuery(this).addClass('active_menu_item');
+        }
+    });
+
+    jQuery('.open-mobile-menu-order-food').click(function(){
+        jQuery('.order-food-mobile-menu').toggleClass('order-food-mobile-menu-active');
     });
 });
 
