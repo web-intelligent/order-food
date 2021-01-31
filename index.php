@@ -1,7 +1,7 @@
 <?php
 /*
 * Plugin Name: Order Food
-* Description: После активации плагина необходимо создать страницу, которая будет отвечать за вывод 
+* Description: После активации плагина необходимо создать страницу, которая будет отвечать за вывод всего меню. Внимание! При смене темы сайта необходимо деактивировать плагин и снова активировать его. 
 */
 
 add_action('init', 'order_food');
@@ -82,6 +82,10 @@ function activation_order_food_plugin() {
 		$taxonomy_template_content = file_get_contents(plugin_dir_url( __FILE__ ) . 'taxonomy-order_food_category.txt');
     	file_put_contents(get_theme_file_path('taxonomy-order_food_category.php'), $taxonomy_template_content);
 	}
+
+	add_filter( 'get_the_archive_title', function( $title ){
+		return preg_replace('~^[^:]+: ~', '', $title );
+	});
 };
 
 register_deactivation_hook(__FILE__, 'deactivation_order_food_plugin');
