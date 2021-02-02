@@ -121,7 +121,6 @@
                             <input class="confirm-order" type="submit" value="Оформить заказ">
                         </div>
                     </aside>
-                    
                 </div>
             </div>
         </div>

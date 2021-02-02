@@ -85,10 +85,10 @@ function activation_order_food_plugin() {
     	file_put_contents(get_theme_file_path('taxonomy-order_food_category.php'), $taxonomy_template_content);
 	}
 
-	// if(!file_exists(get_theme_file_path('order-food-basket.php'))) {
-	// 	$template_content = file_get_contents(plugin_dir_url( __FILE__ ) . 'order-food-basket.txt');
-	// 	file_put_contents(get_theme_file_path('order-food-basket.php'), $template_content);
-	// }
+	if(!file_exists(get_theme_file_path('order-food-basket.php'))) {
+		$template_content = file_get_contents(plugin_dir_url( __FILE__ ) . 'order-food-basket.txt');
+		file_put_contents(get_theme_file_path('order-food-basket.php'), $template_content);
+	}
 
 	if(!file_exists(get_theme_file_path( 'order-food-assets' ))) {
 		mkdir(get_theme_file_path( 'order-food-assets' ));
@@ -120,9 +120,9 @@ function deactivation_order_food_plugin() {
 		unlink(get_theme_file_path('taxonomy-order_food_category.php'));
 	}
 
-	// if(file_exists(get_theme_file_path('order-food-basket.php'))) {
-	// 	unlink(get_theme_file_path('order-food-basket.php'));
-	// }
+	if(file_exists(get_theme_file_path('order-food-basket.php'))) {
+		unlink(get_theme_file_path('order-food-basket.php'));
+	}
 
 	if(file_exists(get_theme_file_path('order-food-assets/order-food-scripts.js'))) {
 		unlink(get_theme_file_path('order-food-assets/order-food-scripts.js'));

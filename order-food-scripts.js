@@ -16,7 +16,7 @@ jQuery(document).ready(function () {
     });
 
     function setCookie(name, value) {
-        document.cookie = name + "=" + value;
+        document.cookie = name + "=" + value + '; path = /';
     }
 
     function getCookie(name) {
@@ -143,6 +143,28 @@ jQuery(document).ready(function () {
         saveOrderCart();
     }
 
+    function deleteOrder() {
+        var removeProductOrderBtn = jQuery('.products-in-cart').find('.remove-product i');
+        jQuery(removeProductOrderBtn).click(function (e) {
+            e.preventDefault();
+            jQuery(this).parent().parent().parent().find('.quantity').attr('min', 0);
+            jQuery(this).parent().parent().parent().find('.quantity').val(0);
+            changeQuantity(jQuery(jQuery(this).parent().parent().parent().find('.quantity')));
+            jQuery(this).parent().parent().parent().remove();
+            saveOrderCart();
+
+            if (jQuery('.products-in-cart-order').length == 1) {
+                jQuery('.order-title').hide();
+                jQuery('.empty-basket').show();
+            } 
+            if(jQuery('.products-in-cart-delivery').length == 1) {
+                jQuery('.delivery-title').hide();
+                jQuery('.empty-basket').show();
+            }
+        });
+    }
+    deleteOrder();
+
     // доставка
     jQuery('.delivery').click(function (e) {
         e.preventDefault;
@@ -183,6 +205,7 @@ jQuery(document).ready(function () {
         });
 
         saveOrderCart();
+        deleteOrder();
 
     });
 
@@ -229,44 +252,12 @@ jQuery(document).ready(function () {
         });
 
         saveOrderCart();
+        deleteOrder();
 
     });
 
     jQuery('.quantity').on('change', function () {
         changeQuantity(jQuery(this));
     });
-
-    // удаление доставки
-
-    var removeProductDeliveryBtn = jQuery('.products-in-cart-delivery').find('.remove-product i');
-    jQuery(removeProductDeliveryBtn).click(function (e) { 
-        e.preventDefault();
-        jQuery(this).parent().parent().parent().remove();
-
-        if (jQuery('.products-in-cart-delivery').length == 1) {
-            jQuery('.delivery-title').hide();
-        } else {
-            jQuery('.delivery-title').show();
-        }
-        
-    });
-
-    // удаление предзаказа
-
-    var removeProductOrderBtn = jQuery('.products-in-cart-order').find('.remove-product i');
-    jQuery(removeProductOrderBtn).click(function (e) {
-        e.preventDefault();
-
-        jQuery(this).parent().parent().parent().remove();
-
-        if (jQuery('.products-in-cart-order').length == 1) {
-            jQuery('.order-title').hide();
-        } else {
-            jQuery('.order-title').show();
-        }
-
-    });
-
-
 
 });
