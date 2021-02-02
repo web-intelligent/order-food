@@ -70,6 +70,8 @@ function create_taxonomy_for_order_food() {
 	] );
 }
 
+
+
 register_activation_hook(__FILE__, 'activation_order_food_plugin');
 
 function activation_order_food_plugin() {
@@ -81,6 +83,25 @@ function activation_order_food_plugin() {
 	if(!file_exists(get_theme_file_path('taxonomy-order_food_category.php'))) {
 		$taxonomy_template_content = file_get_contents(plugin_dir_url( __FILE__ ) . 'taxonomy-order_food_category.txt');
     	file_put_contents(get_theme_file_path('taxonomy-order_food_category.php'), $taxonomy_template_content);
+	}
+
+	// if(!file_exists(get_theme_file_path('order-food-basket.php'))) {
+	// 	$template_content = file_get_contents(plugin_dir_url( __FILE__ ) . 'order-food-basket.txt');
+	// 	file_put_contents(get_theme_file_path('order-food-basket.php'), $template_content);
+	// }
+
+	if(!file_exists(get_theme_file_path( 'order-food-assets' ))) {
+		mkdir(get_theme_file_path( 'order-food-assets' ));
+	}
+	
+	if(!file_exists(get_theme_file_path( 'order-food-assets/order-food-scripts.js' ))) {
+		$script_content = file_get_contents(plugin_dir_url( __FILE__ ) . 'order-food-scripts.js');
+		file_put_contents(get_theme_file_path('order-food-assets/order-food-scripts.js'), $script_content);
+	}
+
+	if(!file_exists(get_theme_file_path( 'order-food-assets/order-food-style.css' ))) {
+		$style_content = file_get_contents(plugin_dir_url( __FILE__ ) . 'order-food-style.css');
+		file_put_contents(get_theme_file_path('order-food-assets/order-food-style.css'), $style_content);
 	}
 
 	add_filter( 'get_the_archive_title', function( $title ){
@@ -97,5 +118,21 @@ function deactivation_order_food_plugin() {
 
 	if(file_exists(get_theme_file_path('taxonomy-order_food_category.php'))) {
 		unlink(get_theme_file_path('taxonomy-order_food_category.php'));
+	}
+
+	// if(file_exists(get_theme_file_path('order-food-basket.php'))) {
+	// 	unlink(get_theme_file_path('order-food-basket.php'));
+	// }
+
+	if(file_exists(get_theme_file_path('order-food-assets/order-food-scripts.js'))) {
+		unlink(get_theme_file_path('order-food-assets/order-food-scripts.js'));
+	}
+
+	if(file_exists(get_theme_file_path('order-food-assets/order-food-style.css'))) {
+		unlink(get_theme_file_path('order-food-assets/order-food-style.css'));
+	}
+
+	if(file_exists(get_theme_file_path('order-food-assets'))) {
+		rmdir(get_theme_file_path('order-food-assets'));
 	}
 }

@@ -1,0 +1,49 @@
+<?php 
+
+/*
+ * Template name: Оформление заказа 
+ * Template post type: page
+ */
+
+
+?>
+<script src="https://kit.fontawesome.com/1a3f8aa39e.js" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+<link rel="stylesheet" href="<?php bloginfo('template_url'); ?>/order-food-assets/order-food-style.css">
+
+<?php get_header();?>
+
+<div class="container">
+    <table class="table table-bordered table-striped table-hover">
+        <thead>
+            <tr>
+            <th scope="col">#</th>
+            <th scope="col">First</th>
+            <th scope="col">Last</th>
+            <th scope="col">Handle</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+            <th scope="row">1</th>
+            <td>Mark</td>
+            <td>Otto</td>
+            <td>@mdo</td>
+            </tr>
+            <tr>
+            <th scope="row">2</th>
+            <td>Jacob</td>
+            <td>Thornton</td>
+            <td>@fat</td>
+            </tr>
+            <tr>
+            <th scope="row">3</th>
+            <td colspan="2">Larry the Bird</td>
+            <td>@twitter</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<?php get_footer();?>
+
+<script src="<?php bloginfo('template_url');?>/order-food-assets/order-food-scripts.js"></script>
