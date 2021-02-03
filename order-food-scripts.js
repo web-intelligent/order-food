@@ -15,6 +15,33 @@ jQuery(document).ready(function () {
         jQuery('.order-food-mobile-menu').toggleClass('order-food-mobile-menu-active');
     });
 
+    function countDiscount() {
+        var totalSummary = Number(jQuery('.total-price .summary').text());
+
+        var discountMoney = Number(jQuery('.discount-money').text());
+
+        console.log(discountMoney);
+
+        var discountPercent = totalSummary * 100 / discountMoney;
+
+        console.log(discountPercent);
+
+        var discountResidue = discountMoney - totalSummary;
+        console.log(discountResidue);
+
+        jQuery('.discount-money').html(discountResidue);
+        Query('.discount-bg').css('width', discountPercent + '%');
+
+        // if (discountResidue <= 0) {
+        //     jQuery('.discount-money').html(0);
+        //     jQuery('.discount-bg').css('width', '100%');
+        // } else {
+        //     jQuery('.discount-money').html(discountResidue);
+        //     jQuery('.discount-bg').css('width', discountPercent + '%');
+        // }
+
+    };
+
     function setCookie(name, value) {
         document.cookie = name + "=" + value + '; path = /';
     }
@@ -141,6 +168,7 @@ jQuery(document).ready(function () {
         summary = summary + price * quatityResult;
         jQuery('.summary').html(summary + ' <i class="fas fa-ruble-sign"></i>');
         saveOrderCart();
+        countDiscount();
     }
 
     function deleteOrder() {
@@ -168,44 +196,51 @@ jQuery(document).ready(function () {
     // доставка
     jQuery('.delivery').click(function (e) {
         e.preventDefault;
-        var summary = Number(jQuery('.total-price .summary').text());
-        var product = jQuery(this).parent().parent();
-        var productImg = jQuery(product).find('img').attr('src');
-        var productName = jQuery(product).find('.product-header h2').text();
-        var productPrice = jQuery(product).find('.price').text();
-        var productId = jQuery(product).data('id');
 
-        jQuery('.empty-basket').hide();
-        jQuery('.delivery-title').show();
-        jQuery('.products-in-cart-delivery').show();
-
-        if (jQuery('.products-in-cart-delivery').find('[data-id = "' + productId + '"]').length > 0) {
-            var productQuantity = jQuery('.products-in-cart-delivery').find('[data-id = "' + productId + '"]').find('.quantity').val();
-            jQuery('.products-in-cart-delivery').find('[data-id = "' + productId + '"]').find('.quantity').val(Number(productQuantity) + 1);
-            jQuery('.products-in-cart-delivery').find('[data-id = "' + productId + '"]').find('.quantity').attr('data-value', Number(productQuantity) + 1);
+        if (jQuery('.order-sidebar').find('.order-title').is(':visible')) {
+            jQuery('.confirm-window').show();
+            jQuery('.order-confirm').show();
         } else {
-            jQuery('.products-in-cart-delivery').append('<div data-id="' + productId + '" class="product-in-cart"> ' +
-                ' <img class="product-in-cart-img" src="' + productImg + '" alt=""> ' +
-                '<div class="product-name-quantity"> ' +
-                '<h6>' + productName + '</h6>' +
-                '<input min="1" value="1" data-value="1" class="quantity" type="number">' + 
-                '<div class="remove-product"><i class="fas fa-times"></i></div>' +
-                '</div> ' +
-                '<div class="price"> ' +
-                productPrice + ' <i class="fas fa-ruble-sign"></i> ' +
-                ' </div> ' +
-                ' </div>');
+            var summary = Number(jQuery('.total-price .summary').text());
+            var product = jQuery(this).parent().parent();
+            var productImg = jQuery(product).find('img').attr('src');
+            var productName = jQuery(product).find('.product-header h2').text();
+            var productPrice = jQuery(product).find('.price').text();
+            var productId = jQuery(product).data('id');
+
+            jQuery('.empty-basket').hide();
+            jQuery('.delivery-title').show();
+            jQuery('.products-in-cart-delivery').show();
+
+            if (jQuery('.products-in-cart-delivery').find('[data-id = "' + productId + '"]').length > 0) {
+                var productQuantity = jQuery('.products-in-cart-delivery').find('[data-id = "' + productId + '"]').find('.quantity').val();
+                jQuery('.products-in-cart-delivery').find('[data-id = "' + productId + '"]').find('.quantity').val(Number(productQuantity) + 1);
+                jQuery('.products-in-cart-delivery').find('[data-id = "' + productId + '"]').find('.quantity').attr('data-value', Number(productQuantity) + 1);
+            } else {
+                jQuery('.products-in-cart-delivery').append('<div data-id="' + productId + '" class="product-in-cart"> ' +
+                    ' <img class="product-in-cart-img" src="' + productImg + '" alt=""> ' +
+                    '<div class="product-name-quantity"> ' +
+                    '<h6>' + productName + '</h6>' +
+                    '<input min="1" value="1" data-value="1" class="quantity" type="number">' +
+                    '<div class="remove-product"><i class="fas fa-times"></i></div>' +
+                    '</div> ' +
+                    '<div class="price"> ' +
+                    productPrice + ' <i class="fas fa-ruble-sign"></i> ' +
+                    ' </div> ' +
+                    ' </div>');
+            }
+
+            summary = summary + Number(productPrice);
+            jQuery('.summary').html(summary + '<i class="fas fa-ruble-sign"></i>');
+
+            jQuery('.quantity').on('change', function () {
+                changeQuantity(jQuery(this));
+            });
+
+            saveOrderCart();
+            deleteOrder();
+            countDiscount();
         }
-
-        summary = summary + Number(productPrice);
-        jQuery('.summary').html(summary + '<i class="fas fa-ruble-sign"></i>');
-
-        jQuery('.quantity').on('change', function () {
-            changeQuantity(jQuery(this));
-        });
-
-        saveOrderCart();
-        deleteOrder();
 
     });
 
@@ -213,51 +248,80 @@ jQuery(document).ready(function () {
 
     jQuery('.order').click(function (e) {
         e.preventDefault;
-        var summary = Number(jQuery('.total-price .summary').text());
-        var product = jQuery(this).parent().parent();
-        var productImg = jQuery(product).find('img').attr('src');
-        var productName = jQuery(product).find('.product-header h2').text();
-        var productPrice = jQuery(product).find('.price').text();
-        var productId = jQuery(product).data('id');
 
-        jQuery('.empty-basket').hide();
-        jQuery('.order-title').show();
-        jQuery('.products-in-cart-order').show();
-
-        if (jQuery('.products-in-cart-order').find('[data-id = "' + productId + '"]').length > 0) {
-            var productQuantity = jQuery('.products-in-cart-order').find('[data-id = "' + productId + '"]').find('.quantity').val();
-            jQuery('.products-in-cart-order').find('[data-id = "' + productId + '"]').find('.quantity').val(Number(productQuantity) + 1);
-            jQuery('.products-in-cart-order').find('[data-id = "' + productId + '"]').find('.quantity').attr('data-value', Number(productQuantity) + 1);
+        if (jQuery('.order-sidebar').find('.delivery-title').is(':visible')) {
+            jQuery('.confirm-window').show();
+            jQuery('.delivery-confirm').show();
         } else {
-            jQuery('.products-in-cart-order').append('<div data-id="' + productId + '" class="product-in-cart"> ' +
-                '<img class="product-in-cart-img" src="' + productImg + '" alt=""> ' +
-                '<div class="product-name-quantity"> ' +
-                '<h6>' + productName + '</h6>' +
-                '<input min="1" value="1" data-value="1" class="quantity" type="number">' +
-                '<div class="remove-product"><i class="fas fa-times"></i></div>' +
-                '</div> ' +
-                '<div class="price"> ' +
-                productPrice + ' <i class="fas fa-ruble-sign"></i> ' +
-                ' </div> ' +
-                ' </div>');
+            var summary = Number(jQuery('.total-price .summary').text());
+            var product = jQuery(this).parent().parent();
+            var productImg = jQuery(product).find('img').attr('src');
+            var productName = jQuery(product).find('.product-header h2').text();
+            var productPrice = jQuery(product).find('.price').text();
+            var productId = jQuery(product).data('id');
+
+            jQuery('.empty-basket').hide();
+            jQuery('.order-title').show();
+            jQuery('.products-in-cart-order').show();
+
+            if (jQuery('.products-in-cart-order').find('[data-id = "' + productId + '"]').length > 0) {
+                var productQuantity = jQuery('.products-in-cart-order').find('[data-id = "' + productId + '"]').find('.quantity').val();
+                jQuery('.products-in-cart-order').find('[data-id = "' + productId + '"]').find('.quantity').val(Number(productQuantity) + 1);
+                jQuery('.products-in-cart-order').find('[data-id = "' + productId + '"]').find('.quantity').attr('data-value', Number(productQuantity) + 1);
+            } else {
+                jQuery('.products-in-cart-order').append('<div data-id="' + productId + '" class="product-in-cart"> ' +
+                    '<img class="product-in-cart-img" src="' + productImg + '" alt=""> ' +
+                    '<div class="product-name-quantity"> ' +
+                    '<h6>' + productName + '</h6>' +
+                    '<input min="1" value="1" data-value="1" class="quantity" type="number">' +
+                    '<div class="remove-product"><i class="fas fa-times"></i></div>' +
+                    '</div> ' +
+                    '<div class="price"> ' +
+                    productPrice + ' <i class="fas fa-ruble-sign"></i> ' +
+                    ' </div> ' +
+                    ' </div>');
+            }
+
+            summary = summary + Number(productPrice);
+            jQuery('.summary').html(summary + '<i class="fas fa-ruble-sign"></i>');
+
+            console.log(jQuery('.quantity').val());
+
+            jQuery('.quantity').on('change', function () {
+                changeQuantity(jQuery(this));
+            });
+
+            saveOrderCart();
+            deleteOrder();
+            countDiscount();
         }
 
-        summary = summary + Number(productPrice);
-        jQuery('.summary').html(summary + '<i class="fas fa-ruble-sign"></i>');
-
-        console.log(jQuery('.quantity').val());
-
-        jQuery('.quantity').on('change', function () {
-            changeQuantity(jQuery(this));
-        });
-
-        saveOrderCart();
-        deleteOrder();
-
     });
+
+    function deleteDeliveryOrder() {
+        var allProductsDelivery = jQuery('.product-in-cart');
+        for (let i = 0; i < allProductsDelivery.length; i++) {
+            jQuery(allProductsDelivery[i]).remove();
+        }
+        
+    }
 
     jQuery('.quantity').on('change', function () {
         changeQuantity(jQuery(this));
     });
+
+    jQuery('.negative-confirm').click(function(){
+        jQuery('.confirm-window').hide();
+        jQuery('.order-confirm').hide();
+        jQuery('.delivery-confirm').hide();
+    });
+
+    jQuery('.positive-confirm').click(function () {
+        deleteDeliveryOrder();
+        jQuery('.confirm-window').hide();
+        jQuery('.order-confirm').hide();
+        jQuery('.delivery-confirm').hide();
+    });
+
 
 });

@@ -22,6 +22,22 @@
  ?>
 </ul>
 <?php get_header();?>
+<div style="display:none" class="confirm-window">
+    <div style="display:none" class="delivery-confirm">
+        Вы сделали предзаказ в ресторане. Отменить доставку?
+        <div class="confirm-buttons">
+            <input type="button" class="positive-confirm" value="Да">
+            <input type="button" class="negative-confirm" value="Нет">
+        </div>
+    </div>
+    <div style="display:none" class="order-confirm">
+        Вы сделали заказ на доставку. Отменить предзаказ в ресторане? 
+        <div class="confirm-buttons">
+            <input type="button" class="positive-confirm" value="Да">
+            <input type="button" class="negative-confirm" value="Нет">
+        </div>
+    </div>
+</div>
 <div class="container mt-5">
     <div class="row">
         <div class="col-12">
@@ -116,6 +132,12 @@
                             <div class="total-price">
                                 <b>ИТОГО: </b> <div class="summary"> 0 <i class="fas fa-ruble-sign"></i></div> 
                             </div>
+                        </div>
+                        <div class="widget">
+                            <div class="discount-wrapper">
+                                <div class="discount-bg"></div>
+                            </div>
+                            <p>До скидки осталось: <span class="discount-money">3000</span> <i class="fas fa-ruble-sign"></i></p>
                         </div>
                         <div class="widget">
                             <input class="confirm-order" type="submit" value="Оформить заказ">
