@@ -14,31 +14,24 @@ jQuery(document).ready(function () {
     jQuery('.open-mobile-menu-order-food').click(function () {
         jQuery('.order-food-mobile-menu').toggleClass('order-food-mobile-menu-active');
     });
+    
+    var discountMoney = Number(jQuery('.discount-money').text());
 
     function countDiscount() {
         var totalSummary = Number(jQuery('.total-price .summary').text());
-
-        var discountMoney = Number(jQuery('.discount-money').text());
-
-        console.log(discountMoney);
-
+        var discountResidue = discountMoney - totalSummary;
         var discountPercent = totalSummary * 100 / discountMoney;
 
-        console.log(discountPercent);
-
-        var discountResidue = discountMoney - totalSummary;
-        console.log(discountResidue);
-
-        jQuery('.discount-money').html(discountResidue);
-        Query('.discount-bg').css('width', discountPercent + '%');
-
-        // if (discountResidue <= 0) {
-        //     jQuery('.discount-money').html(0);
-        //     jQuery('.discount-bg').css('width', '100%');
-        // } else {
-        //     jQuery('.discount-money').html(discountResidue);
-        //     jQuery('.discount-bg').css('width', discountPercent + '%');
-        // }
+        if(discountResidue <= 0) {
+            jQuery('.discount-finish').show();
+            jQuery('.discount-start').hide();
+            jQuery('.discount-bg').css('width', '100%');
+        } else {
+            jQuery('.discount-start').show();
+            jQuery('.discount-finish').hide();
+            jQuery('.discount-money').html(discountResidue);
+            jQuery('.discount-bg').css('width', discountPercent + '%');
+        }
 
     };
 
@@ -156,6 +149,7 @@ jQuery(document).ready(function () {
     };
 
     loadOrderCart();
+    countDiscount();
 
     function changeQuantity(param) {
         var quantityCurrent = Number(jQuery(param).attr('data-value'));
@@ -171,6 +165,18 @@ jQuery(document).ready(function () {
         countDiscount();
     }
 
+    function hideEmptyCart() {
+        if (jQuery('.products-in-cart-order .product-in-cart').length == 0) {
+            jQuery('.order-title').hide();  
+        } 
+        if(jQuery('.products-in-cart-delivery .product-in-cart').length == 0) {
+            jQuery('.delivery-title').hide();
+        }
+        if(jQuery('.products-in-cart-order .product-in-cart').length == 0 && jQuery('.products-in-cart-delivery .product-in-cart').length == 0) {
+            jQuery('.empty-basket').show();
+        }
+    }
+
     function deleteOrder() {
         var removeProductOrderBtn = jQuery('.products-in-cart').find('.remove-product i');
         jQuery(removeProductOrderBtn).click(function (e) {
@@ -180,15 +186,7 @@ jQuery(document).ready(function () {
             changeQuantity(jQuery(jQuery(this).parent().parent().parent().find('.quantity')));
             jQuery(this).parent().parent().parent().remove();
             saveOrderCart();
-
-            if (jQuery('.products-in-cart-order').length == 1) {
-                jQuery('.order-title').hide();
-                jQuery('.empty-basket').show();
-            } 
-            if(jQuery('.products-in-cart-delivery').length == 1) {
-                jQuery('.delivery-title').hide();
-                jQuery('.empty-basket').show();
-            }
+            hideEmptyCart();
         });
     }
     deleteOrder();
@@ -318,9 +316,13 @@ jQuery(document).ready(function () {
 
     jQuery('.positive-confirm').click(function () {
         deleteDeliveryOrder();
+        jQuery('.summary').html(0 + '<i class="fas fa-ruble-sign"></i>');
         jQuery('.confirm-window').hide();
         jQuery('.order-confirm').hide();
         jQuery('.delivery-confirm').hide();
+        saveOrderCart();
+        hideEmptyCart();
+        countDiscount();
     });
 
 

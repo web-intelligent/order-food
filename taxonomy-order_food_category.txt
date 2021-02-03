@@ -123,7 +123,8 @@ get_header();
                             <div class="discount-wrapper">
                                 <div class="discount-bg"></div>
                             </div>
-                            <p>До скидки осталось: 3000 <i class="fas fa-ruble-sign"></i></p>
+                            <p class="discount-start">До скидки осталось: <span class="discount-money">3000</span> <i class="fas fa-ruble-sign"></i></p>
+                            <p style="display:none;" class="discount-finish">Ваша скидка 10%</p>
                         </div>
                         <div class="widget">
                             <input class="confirm-order" type="submit" value="Оформить заказ">
