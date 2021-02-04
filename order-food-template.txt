@@ -141,7 +141,7 @@
                             <p style="display:none;" class="discount-finish">Ваша скидка 10%</p>
                         </div>
                         <div class="widget">
-                            <input class="confirm-order" type="submit" value="Оформить заказ">
+                            <a class="confirm-order" href="/оформление-заказа/">Оформить заказ</a>
                         </div>
                     </aside>
                 </div>
