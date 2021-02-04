@@ -325,6 +325,10 @@ jQuery(document).ready(function () {
         countDiscount();
     });
 
+    jQuery('.confirm-order').click(function(){
+        jQuery('.confirm-order-table').show();
+    });
+
     function loadOrderInTable(){
         var deliveryString = getCookie('delivery');
         var orderString = getCookie('order');
@@ -358,7 +362,25 @@ jQuery(document).ready(function () {
                         '<td colspan="1"><b>Итого: </b></td>' +
                         '<td>' + summary + ' <i class="fas fa-ruble-sign"></i></td>' +
                     '</tr>'
-                )
+                );
+                jQuery('.props').append(
+                    '<div class="form-group">'+
+                        '<label>Ваше имя *</label>'+
+                        '<input type="text" class="form-control">'+
+                    '</div>'+
+                    '<div class="form-group">'+
+                        '<label>Номер телефона *</label>'+
+                        '<input type="phone" class="form-control">'+
+                    '</div>'+
+                    '<div class="form-group">'+
+                        '<label>Адрес доставки заказа</label>'+
+                        '<input type="text" class="form-control">'+
+                    '</div>'+
+                    '<div class="form-group">'+
+                        '<label>Почтовый ящик</label>'+
+                        '<input type="email" class="form-control">'+
+                    '</div>'
+                );
             }
 
         }
@@ -403,8 +425,8 @@ jQuery(document).ready(function () {
                         '<input type="phone" class="form-control">'+
                     '</div>'+
                     '<div class="form-group">'+
-                        '<label>Адрес доставки</label>'+
-                        '<input type="date-time" class="form-control">'+
+                        '<label>Время и день прибытия в ресторане</label>'+
+                        '<input type="datetime" class="form-control">'+
                     '</div>'+
                     '<div class="form-group">'+
                         '<label>Почтовый ящик</label>'+
