@@ -99,6 +99,11 @@ function activation_order_food_plugin() {
 		file_put_contents(get_theme_file_path('order-food-assets/order-food-scripts.js'), $script_content);
 	}
 
+	if(!file_exists(get_theme_file_path( 'order-food-assets/jquery.js' ))) {
+		$script_content = file_get_contents(plugin_dir_url( __FILE__ ) . 'jquery.js');
+		file_put_contents(get_theme_file_path('order-food-assets/jquery.js'), $script_content);
+	}
+
 	if(!file_exists(get_theme_file_path( 'order-food-assets/order-food-style.css' ))) {
 		$style_content = file_get_contents(plugin_dir_url( __FILE__ ) . 'order-food-style.css');
 		file_put_contents(get_theme_file_path('order-food-assets/order-food-style.css'), $style_content);
@@ -126,6 +131,10 @@ function deactivation_order_food_plugin() {
 
 	if(file_exists(get_theme_file_path('order-food-assets/order-food-scripts.js'))) {
 		unlink(get_theme_file_path('order-food-assets/order-food-scripts.js'));
+	}
+
+	if(file_exists(get_theme_file_path('order-food-assets/jquery.js'))) {
+		unlink(get_theme_file_path('order-food-assets/jquery.js'));
 	}
 
 	if(file_exists(get_theme_file_path('order-food-assets/order-food-style.css'))) {

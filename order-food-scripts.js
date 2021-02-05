@@ -191,6 +191,118 @@ jQuery(document).ready(function () {
     }
     deleteOrder();
 
+    function loadOrderInTable() {
+        var deliveryString = getCookie('delivery');
+        var orderString = getCookie('order');
+        summary = getCookie('summary');
+
+        if (deliveryString != '') {
+            var delivery = JSON.parse(deliveryString);
+            if (delivery.productId.length > 0) {
+                for (var i = 0; i < delivery.productId.length; i++) {
+                    var productNumber = i + 1
+                    jQuery('.order-table tbody').append('<tr>' +
+                        '<th scope="row">' + productNumber + '</th>' +
+                        '<td>' + delivery.productName[i] + '</td>' +
+                        '<td>' + delivery.productPrice[i] + '</td>' +
+                        '<td>' + delivery.productQuantity[i] + '</td>' +
+                        '</tr>');
+                };
+                var discount;
+                if (summary >= 3000) {
+                    discount = 10;
+                    discountSummary = summary * discount / 100;
+                    summary = summary - discountSummary;
+
+                } else {
+                    discount = 0;
+                }
+                jQuery('.order-total-table tbody').append(
+                    '<tr>' +
+                    '<th scope="row">Скидка: </th>' +
+                    '<td>' + discount + '%</td>' +
+                    '<td colspan="1"><b>Итого: </b></td>' +
+                    '<td>' + summary + ' <i class="fas fa-ruble-sign"></i></td>' +
+                    '</tr>'
+                );
+                jQuery('.props').append(
+                    '<div class="form-group">' +
+                    '<label>Ваше имя *</label>' +
+                    '<input type="text" class="form-control">' +
+                    '</div>' +
+                    '<div class="form-group">' +
+                    '<label>Номер телефона *</label>' +
+                    '<input type="phone" class="form-control">' +
+                    '</div>' +
+                    '<div class="form-group">' +
+                    '<label>Адрес доставки заказа</label>' +
+                    '<input type="text" class="form-control">' +
+                    '</div>' +
+                    '<div class="form-group">' +
+                    '<label>Почтовый ящик</label>' +
+                    '<input type="email" class="form-control">' +
+                    '</div>'
+                );
+            }
+
+        }
+
+        if (orderString != '') {
+            var order = JSON.parse(orderString);
+            if (order.productId.length > 0) {
+                for (var i = 0; i < order.productId.length; i++) {
+                    var productNumber = i + 1
+                    jQuery('.order-table tbody').append('<tr>' +
+                        '<th scope="row">' + productNumber + '</th>' +
+                        '<td>' + order.productName[i] + '</td>' +
+                        '<td>' + order.productPrice[i] + '</td>' +
+                        '<td>' + order.productQuantity[i] + '</td>' +
+                        '</tr>');
+                };
+                var discount;
+                if (summary >= 3000) {
+                    discount = 10;
+                    discountSummary = summary * discount / 100;
+                    summary = summary - discountSummary;
+
+                } else {
+                    discount = 0;
+                }
+                jQuery('.order-total-table tbody').append(
+                    '<tr>' +
+                    '<th scope="row">Скидка: </th>' +
+                    '<td>' + discount + '%</td>' +
+                    '<td colspan="1"><b>Итого: </b></td>' +
+                    '<td>' + summary + ' <i class="fas fa-ruble-sign"></i></td>' +
+                    '</tr>'
+                );
+
+                jQuery('.props').append(
+                    '<div class="form-group">' +
+                    '<label>Ваше имя *</label>' +
+                    '<input type="text" class="form-control">' +
+                    '</div>' +
+                    '<div class="form-group">' +
+                    '<label>Номер телефона *</label>' +
+                    '<input type="phone" class="form-control">' +
+                    '</div>' +
+                    '<div class="form-group">' +
+                    '<label>Дата прибытия в ресторане</label>' +
+                    '<input type="date" class="form-control">' +
+                    '</div>' +
+                    '<label>Время прибытия в ресторане</label>' +
+                    '<input type="time" class="form-control">' +
+                    '</div>' +
+                    '<div class="form-group">' +
+                    '<label>Почтовый ящик</label>' +
+                    '<input type="email" class="form-control">' +
+                    '</div>'
+                );
+            }
+
+        }
+    }
+
     // доставка
     jQuery('.delivery').click(function (e) {
         e.preventDefault;
@@ -326,118 +438,8 @@ jQuery(document).ready(function () {
     });
 
     jQuery('.confirm-order').click(function(){
+        loadOrderInTable();
         jQuery('.confirm-order-table').show();
     });
-
-    function loadOrderInTable(){
-        var deliveryString = getCookie('delivery');
-        var orderString = getCookie('order');
-        summary = getCookie('summary');
-
-        if (deliveryString != '') {
-            var delivery = JSON.parse(deliveryString);
-            if (delivery.productId.length > 0) {
-                for (var i = 0; i < delivery.productId.length; i++) {
-                    var productNumber = i + 1
-                    jQuery('.order-table tbody').append('<tr>' +
-                        '<th scope="row">' + productNumber + '</th>'+
-                        '<td>' + delivery.productName[i] + '</td>' +
-                        '<td>' + delivery.productPrice[i] + '</td>' +
-                        '<td>' + delivery.productQuantity[i] + '</td>' +
-                    '</tr>');
-                };
-                var discount;
-                if (summary >= 3000) {
-                    discount = 10;
-                    discountSummary = summary * discount / 100;
-                    summary = summary - discountSummary;
-
-                } else {
-                    discount = 0;
-                }
-                jQuery('.order-total-table tbody').append(
-                    '<tr>' +
-                    '<th scope="row">Скидка: </th>' +
-                        '<td>' + discount + '%</td>' +
-                        '<td colspan="1"><b>Итого: </b></td>' +
-                        '<td>' + summary + ' <i class="fas fa-ruble-sign"></i></td>' +
-                    '</tr>'
-                );
-                jQuery('.props').append(
-                    '<div class="form-group">'+
-                        '<label>Ваше имя *</label>'+
-                        '<input type="text" class="form-control">'+
-                    '</div>'+
-                    '<div class="form-group">'+
-                        '<label>Номер телефона *</label>'+
-                        '<input type="phone" class="form-control">'+
-                    '</div>'+
-                    '<div class="form-group">'+
-                        '<label>Адрес доставки заказа</label>'+
-                        '<input type="text" class="form-control">'+
-                    '</div>'+
-                    '<div class="form-group">'+
-                        '<label>Почтовый ящик</label>'+
-                        '<input type="email" class="form-control">'+
-                    '</div>'
-                );
-            }
-
-        }
-
-        if (orderString != '') {
-            var order = JSON.parse(orderString);
-            if (order.productId.length > 0) {
-                for (var i = 0; i < order.productId.length; i++) {
-                    var productNumber = i + 1
-                    jQuery('.order-table tbody').append('<tr>' +
-                        '<th scope="row">' + productNumber + '</th>' +
-                        '<td>' + order.productName[i] + '</td>' +
-                        '<td>' + order.productPrice[i] + '</td>' +
-                        '<td>' + order.productQuantity[i] + '</td>' +
-                        '</tr>');
-                };
-                var discount;
-                if (summary >= 3000) {
-                    discount = 10;
-                    discountSummary = summary * discount / 100;
-                    summary = summary - discountSummary;
-
-                } else {
-                    discount = 0;
-                }
-                jQuery('.order-total-table tbody').append(
-                    '<tr>' +
-                    '<th scope="row">Скидка: </th>' +
-                    '<td>' + discount + '%</td>' +
-                    '<td colspan="1"><b>Итого: </b></td>' +
-                    '<td>' + summary + ' <i class="fas fa-ruble-sign"></i></td>' +
-                    '</tr>'
-                );
-                
-                jQuery('.props').append(
-                    '<div class="form-group">'+
-                        '<label>Ваше имя *</label>'+
-                        '<input type="text" class="form-control">'+
-                    '</div>'+
-                    '<div class="form-group">'+
-                        '<label>Номер телефона *</label>'+
-                        '<input type="phone" class="form-control">'+
-                    '</div>'+
-                    '<div class="form-group">'+
-                        '<label>Время и день прибытия в ресторане</label>'+
-                        '<input type="datetime" class="form-control">'+
-                    '</div>'+
-                    '<div class="form-group">'+
-                        '<label>Почтовый ящик</label>'+
-                        '<input type="email" class="form-control">'+
-                    '</div>'
-                );
-            }
-
-        }
-    }
-
-    loadOrderInTable();
 
 });

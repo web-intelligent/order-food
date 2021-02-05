@@ -1,16 +1,12 @@
 .confirm-order {
     width:100%;
     margin:30px auto;
-    /* text-decoration: none;
-    background: #f27b2c;
-    border-radius: 3px;
-    padding: 5px 15px; */
 }
 .confirm-order-table {
     position: fixed;
     top: 0;
     left: 0;
-    background: rgba(0,0,0,0.9);
+    background: rgba(255, 255, 255, 1);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -21,12 +17,10 @@
 }
 .confirm-order-wrapper {
     margin: 100px auto;
-    background: #fff;
-    padding: 50px;
     border-radius: 5px;
     overflow-y: scroll;
     height: auto;
-    max-height: 80%;
+    max-height: 60%;
     width: 80vw;
 }
 @media screen and (max-width:540px) {
@@ -318,6 +312,19 @@
     border-radius: 9em;
 }
 .products-in-cart::-webkit-scrollbar-thumb:hover {
+    background-color: #b85a1c;
+}
+.confirm-order-wrapper::-webkit-scrollbar {
+    width: 6px; /* ширина для вертикального скролла */
+    height: 6px; /* высота для горизонтального скролла */
+    background-color: #adadad;
+    border-radius: 9em;
+}
+.confirm-order-wrapper::-webkit-scrollbar-thumb {
+    background-color: #f27b2c;
+    border-radius: 9em;
+}
+.confirm-order-wrapper::-webkit-scrollbar-thumb:hover {
     background-color: #b85a1c;
 }
 .remove-product i {

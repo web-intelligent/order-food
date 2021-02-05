@@ -159,7 +159,7 @@ get_header();
                             <p style="display:none;" class="discount-finish">Ваша скидка 10%</p>
                         </div>
                         <div class="widget">
-                            <a class="confirm-order" href="/оформление-заказа/">Оформить заказ</a>
+                            <button class="confirm-order">Оформить заказ</button>
                         </div>
                     </aside>
                 </div>
@@ -170,5 +170,5 @@ get_header();
         <div class="open-mobile-menu-order-food"><i class="fas fa-bars"></i> Меню</div>
         <a href="#" class="mobile-basket"><i class="fas fa-shopping-basket"></i> <span class="summary">0 <i class="fas fa-ruble-sign"></i></span></a>
 	</aside>
-
+<script src="<?php bloginfo('template_url');?>/order-food-assets/jquery.js"></script>
 <script src="<?php bloginfo('template_url');?>/order-food-assets/order-food-scripts.js"></script>
