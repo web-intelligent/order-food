@@ -66,7 +66,7 @@
                     </form>
                 </div>
             </div>
-            <input type="submit" value="Оплатить заказ">
+            <input id="pay-order" type="button" value="Оплатить заказ">
         </div>
     </div>
 </div>

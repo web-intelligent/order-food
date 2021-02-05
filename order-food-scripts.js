@@ -228,19 +228,19 @@ jQuery(document).ready(function () {
                 jQuery('.props').append(
                     '<div class="form-group">' +
                     '<label>Ваше имя *</label>' +
-                    '<input type="text" class="form-control">' +
+                    '<input id="clientName" type="text" class="form-control">' +
                     '</div>' +
                     '<div class="form-group">' +
                     '<label>Номер телефона *</label>' +
-                    '<input type="phone" class="form-control">' +
+                    '<input id="clientPhone" type="phone" class="form-control">' +
                     '</div>' +
                     '<div class="form-group">' +
                     '<label>Адрес доставки заказа</label>' +
-                    '<input type="text" class="form-control">' +
+                    '<input id="clientAddress" type="text" class="form-control">' +
                     '</div>' +
                     '<div class="form-group">' +
                     '<label>Почтовый ящик</label>' +
-                    '<input type="email" class="form-control">' +
+                    '<input id="clientEmail" type="email" class="form-control">' +
                     '</div>'
                 );
             }
@@ -280,22 +280,22 @@ jQuery(document).ready(function () {
                 jQuery('.props').append(
                     '<div class="form-group">' +
                     '<label>Ваше имя *</label>' +
-                    '<input type="text" class="form-control">' +
+                    '<input id="clientName" type="text" class="form-control">' +
                     '</div>' +
                     '<div class="form-group">' +
                     '<label>Номер телефона *</label>' +
-                    '<input type="phone" class="form-control">' +
+                    '<input id="clientPhone" type="phone" class="form-control">' +
                     '</div>' +
                     '<div class="form-group">' +
-                    '<label>Дата прибытия в ресторане</label>' +
-                    '<input type="date" class="form-control">' +
+                    '<label>Дата прибытия в ресторан</label>' +
+                    '<input id="clientDate" type="date" class="form-control">' +
                     '</div>' +
-                    '<label>Время прибытия в ресторане</label>' +
-                    '<input type="time" class="form-control">' +
+                    '<label>Время прибытия в ресторан</label>' +
+                    '<input id="clientTime" type="time" class="form-control">' +
                     '</div>' +
                     '<div class="form-group">' +
                     '<label>Почтовый ящик</label>' +
-                    '<input type="email" class="form-control">' +
+                    '<input id="clientEmail" type="email" class="form-control">' +
                     '</div>'
                 );
             }
@@ -442,4 +442,71 @@ jQuery(document).ready(function () {
         jQuery('.confirm-order-table').show();
     });
 
+    function sendOrder() {
+        var deliveryString = getCookie('delivery');
+        var orderString = getCookie('order');
+        summary = getCookie('summary');
+        var message = '';
+        var clientName = jQuery('#clientName').val();
+        var clientPhone = jQuery('#clientPhone').val();
+        var clientAddress = jQuery('#clientAddress').val();
+        var clientEmail = jQuery('#clientEmail').val();
+        var clientDate = jQuery('#clientDate').val();
+        var clientTime = jQuery('#clientTime').val();
+        
+
+        if (deliveryString != '') {
+            
+            var delivery = JSON.parse(deliveryString);
+            if (delivery.productId.length > 0) {
+                message = message + 'Заказ на доставку \n';
+                for (var i = 0; i < delivery.productId.length; i++) {
+                    message = message + (i + 1) + ' ' + delivery.productName[i].trim() + ' ' + delivery.productPrice[i].trim() + ' x ' + delivery.productQuantity[i].trim() + '\n';
+                };
+                var discount;
+                if (summary >= 3000) {
+                    discount = 10;
+                    discountSummary = summary * discount / 100;
+                    summary = summary - discountSummary;
+
+                } else {
+                    discount = 0;
+                }
+
+                message = message + 'ИТОГО: ' + summary + ' Со скидкой ' + discount + '%' + '\n';
+                message = message + ' ' + clientName + ' ' + clientPhone + ' ' + clientAddress + ' ' + clientEmail ;
+            }
+
+        }
+
+        if (orderString != '') {
+            var order = JSON.parse(orderString);
+            if (order.productId.length > 0) {
+                message = message + 'Предзаказ в ресторане \n';
+                for (var i = 0; i < order.productId.length; i++) {
+                    message = message + (i + 1) + ' ' + order.productName[i].trim() + ' ' + order.productPrice[i].trim() + ' x ' + order.productQuantity[i].trim() + '\n';
+                };
+                var discount;
+                if (summary >= 3000) {
+                    discount = 10;
+                    discountSummary = summary * discount / 100;
+                    summary = summary - discountSummary;
+
+                } else {
+                    discount = 0;
+                }
+
+                message = message + 'ИТОГО: ' + summary + ' Со скидкой ' + discount + '%' + '\n';
+                message = message + ' ' + clientName + ' ' + clientPhone + ' ' + clientDate + ' ' + clientTime + ' ' + clientEmail ;
+            }
+        }
+        console.log(message);
+        jQuery.get('https://api.telegram.org/bot1592268106:AAEZ0OMoRG6LyawtMbq3oLQWBdGmJ1cb2wY/sendMessage', {chat_id:'1336055964', text:message});
+        jQuery.get('https://api.telegram.org/bot1592268106:AAEZ0OMoRG6LyawtMbq3oLQWBdGmJ1cb2wY/sendMessage', {chat_id:'783982762', text:message});
+    }
+
+    jQuery('#pay-order').click(function () { 
+        sendOrder();
+        
+    });
 });
