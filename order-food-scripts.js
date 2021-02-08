@@ -509,4 +509,6 @@ jQuery(document).ready(function () {
         sendOrder();
         
     });
+
+    console.log(jQuery('.test'));
 });

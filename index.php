@@ -70,14 +70,26 @@ function create_taxonomy_for_order_food() {
 	] );
 }
 
+
+add_action('admin_menu', 'add_sub_menu_order_food');
+function add_sub_menu_order_food() {
+	add_submenu_page( 'edit.php?post_type=order_food', 'Settings', 'Настройки', 'manage_options', 'settings', 'order_food_settings_function');
+};
+
+function order_food_settings_function() {
+	echo "<h2>Настройка скидки</h2>";
+	echo '<label>Размер скидки </label><input class="discount-money-admin" type="text"> %<br><br>';
+	echo '<label>Минимальная сумма покупкии для скидки </label><input type="text"> рублей';
+
+	wp_enqueue_style( 'order-food-jquery', plugins_url('jquery.js', __FILE__));
+	wp_enqueue_style( 'order-food-sripts', plugins_url('order-food-scripts.js', __FILE__));
+}
+
+
 add_action('add_meta_boxes', 'add_meta_box_order_food');
 function add_meta_box_order_food() {
 		remove_meta_box('postcustom', 'order_food', 'normal');
-		add_meta_box( 'order-food-meta', 'Order Food Meta', 'order_food_meta_boxes', 'order_food', 'normal', 'high'
-		// array(
-		// 	'__block_editor_compatible_meta_box' => false,
-		// )
-	);
+		add_meta_box( 'order-food-meta', 'Характеристики блюда', 'order_food_meta_boxes', 'order_food', 'normal', 'high');
 	function order_food_meta_boxes() {
 		$price = get_post_meta(get_the_ID(), 'Цена', true);
 		$weight = get_post_meta(get_the_ID(), 'Вес', true);
@@ -100,8 +112,6 @@ function save_order_food_meta($post_id) {
 		update_post_meta($post_id, 'Вес', $_POST['weight_order_food']);
 		update_post_meta($post_id, 'Доставка', ($_POST['delivery_order_food'] == 'on')? 1:0);
 		update_post_meta($post_id, 'Предзаказ', ($_POST['order_order_food'] == 'on')? 1:0);
-		//update_post_meta($post_id, 'Предзаказ', 'off');
-		// var_dump($_POST['delivery_order_food']);
 	}
 }
 
