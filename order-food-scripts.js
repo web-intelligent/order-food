@@ -232,7 +232,7 @@ jQuery(document).ready(function () {
                     '</div>' +
                     '<div class="form-group">' +
                     '<label>Номер телефона *</label>' +
-                    '<input id="clientPhone" type="phone" class="form-control">' +
+                    '<input id="clientPhone" type="tel" class="form-control">' +
                     '</div>' +
                     '<div class="form-group">' +
                     '<label>Адрес доставки заказа</label>' +
@@ -284,7 +284,7 @@ jQuery(document).ready(function () {
                     '</div>' +
                     '<div class="form-group">' +
                     '<label>Номер телефона *</label>' +
-                    '<input id="clientPhone" type="phone" class="form-control">' +
+                    '<input id="clientPhone" type="tel" class="form-control">' +
                     '</div>' +
                     '<div class="form-group">' +
                     '<label>Дата прибытия в ресторан</label>' +
@@ -437,7 +437,7 @@ jQuery(document).ready(function () {
         countDiscount();
     });
 
-    jQuery('.confirm-order').click(function(){
+    jQuery('.confirm-order-btn').click(function(){
         loadOrderInTable();
         jQuery('.confirm-order-table').show();
     });
@@ -502,7 +502,7 @@ jQuery(document).ready(function () {
         }
         console.log(message);
         jQuery.get('https://api.telegram.org/bot1592268106:AAEZ0OMoRG6LyawtMbq3oLQWBdGmJ1cb2wY/sendMessage', {chat_id:'1336055964', text:message});
-        jQuery.get('https://api.telegram.org/bot1592268106:AAEZ0OMoRG6LyawtMbq3oLQWBdGmJ1cb2wY/sendMessage', {chat_id:'783982762', text:message});
+        //jQuery.get('https://api.telegram.org/bot1592268106:AAEZ0OMoRG6LyawtMbq3oLQWBdGmJ1cb2wY/sendMessage', {chat_id:'783982762', text:message});
     }
 
     jQuery('#pay-order').click(function () { 

@@ -70,6 +70,41 @@ function create_taxonomy_for_order_food() {
 	] );
 }
 
+add_action('add_meta_boxes', 'add_meta_box_order_food');
+function add_meta_box_order_food() {
+		remove_meta_box('postcustom', 'order_food', 'normal');
+		add_meta_box( 'order-food-meta', 'Order Food Meta', 'order_food_meta_boxes', 'order_food', 'normal', 'high'
+		// array(
+		// 	'__block_editor_compatible_meta_box' => false,
+		// )
+	);
+	function order_food_meta_boxes() {
+		$price = get_post_meta(get_the_ID(), 'Цена', true);
+		$weight = get_post_meta(get_the_ID(), 'Вес', true);
+		$delivery = get_post_meta(get_the_ID(), 'Доставка', true);
+		$order = get_post_meta(get_the_ID(), 'Предзаказ', true);
+		
+		echo '<label>Цена</label><input name="price_order_food" value="' . $price . '" type="text"><br><br>';
+		echo '<label>Вес</label><input name="weight_order_food" value="' . $weight . '" type="text"><br><br>';
+		echo '<label>Доставка</label><input name="delivery_order_food" type="checkbox" '.($delivery == 1? 'checked="checked"':'').'><br><br>';
+		echo '<label>Предзаказ</label><input name="order_order_food" type="checkbox" '.($order == 1? 'checked="checked"':'').' >';
+		
+	}
+
+}
+
+add_action('save_post', 'save_order_food_meta');
+function save_order_food_meta($post_id) {
+	if(isset($_POST['price_order_food']) && isset($_POST['weight_order_food'])) {
+		update_post_meta($post_id, 'Цена', $_POST['price_order_food']);
+		update_post_meta($post_id, 'Вес', $_POST['weight_order_food']);
+		update_post_meta($post_id, 'Доставка', ($_POST['delivery_order_food'] == 'on')? 1:0);
+		update_post_meta($post_id, 'Предзаказ', ($_POST['order_order_food'] == 'on')? 1:0);
+		//update_post_meta($post_id, 'Предзаказ', 'off');
+		// var_dump($_POST['delivery_order_food']);
+	}
+}
+
 
 
 register_activation_hook(__FILE__, 'activation_order_food_plugin');
