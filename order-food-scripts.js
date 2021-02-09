@@ -1,8 +1,10 @@
 jQuery(document).ready(function () {
-
+    var currentLocation = jQuery(location).attr('href');
+    console.log(currentLocation);
+    
     jQuery('.menu a').click(function () {
-        jQuery('.menu a').removeClass('active_menu_item');
-        jQuery(this).addClass('active_menu_item');
+        var currentLink = jQuery(this).attr('href');
+        console.log(currentLink);
     });
 
     jQuery('.product-img-in-loop').click(function () {
@@ -34,6 +36,27 @@ jQuery(document).ready(function () {
         }
 
     };
+
+    var dashOffset = 310;
+    function countDiscountCircle() {
+        var totalSummary = Number(jQuery('.total-price .summary').text());
+        var discountPercent = totalSummary * 100 / discountMoney;
+        var circlePercent = (discountPercent * dashOffset / 100);
+        var dashOffsetNew = dashOffset - circlePercent;
+        
+
+        if (dashOffsetNew <= 0) {
+            $('.st1').attr('stroke-dashoffset', 0);
+            $('.discount-percent').show();
+            $('.discount-percent').html('10%');
+        } else {
+            $('.st1').attr('stroke-dashoffset', dashOffsetNew);
+            $('.discount-percent').hide();
+        }
+
+
+
+    }
 
     function setCookie(name, value) {
         document.cookie = name + "=" + value + '; path = /';
@@ -150,6 +173,7 @@ jQuery(document).ready(function () {
 
     loadOrderCart();
     countDiscount();
+    countDiscountCircle();
 
     function changeQuantity(param) {
         var quantityCurrent = Number(jQuery(param).attr('data-value'));
@@ -163,6 +187,7 @@ jQuery(document).ready(function () {
         jQuery('.summary').html(summary + ' <i class="fas fa-ruble-sign"></i>');
         saveOrderCart();
         countDiscount();
+        countDiscountCircle();
     }
 
     function hideEmptyCart() {
@@ -350,6 +375,7 @@ jQuery(document).ready(function () {
             saveOrderCart();
             deleteOrder();
             countDiscount();
+            countDiscountCircle();
         }
 
     });
@@ -404,6 +430,7 @@ jQuery(document).ready(function () {
             saveOrderCart();
             deleteOrder();
             countDiscount();
+            countDiscountCircle();
         }
 
     });
@@ -435,6 +462,7 @@ jQuery(document).ready(function () {
         saveOrderCart();
         hideEmptyCart();
         countDiscount();
+        countDiscountCircle();
     });
 
     jQuery('.confirm-order-btn').click(function(){

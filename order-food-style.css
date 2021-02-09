@@ -23,11 +23,7 @@
     max-height: 60%;
     width: 80vw;
 }
-@media screen and (max-width:540px) {
-    .confirm-order-wrapper {
-        width: 100vw;
-    }
-}
+
 .widget {
     padding-bottom:0 !important;
     margin-bottom: 30px;
@@ -84,6 +80,7 @@
     flex-direction:column;
     z-index: 2000;
     transition:0.2s ease-in-out;
+    padding: 0 20px;
 }
 .order-food-mobile-menu-active {
     bottom:0;
@@ -101,17 +98,7 @@
     text-decoration:none;
     text-transform:uppercase
 }
-@media screen and (max-width: 991px) {
-    .order-food-mobile-menu {
-        display:flex;
-    }
-    .open-mobile-menu-order-food {
-        display:flex;
-    }
-    .menu {
-        display:none;
-    }
-}
+
 .product-img-in-loop {
     width: 100%;
     height: 263px;
@@ -214,14 +201,7 @@
     z-index:2000;
     left:0;
 }
-@media screen and (max-width: 991px) {
-    .order-sidebar-mobile {
-        display:flex;
-    }
-    .order-sidebar {
-        display:none;
-    }
-}
+
 .order-sidebar {
     background: #d5d5d5;
     padding: 10px;
@@ -367,4 +347,61 @@
     width: 0;
     height: 100%;
     border-radius: 3px;
+}
+#discount-circle {
+    position: fixed;
+    bottom: 60px;
+    right: 10px;
+    width:50px;
+    height: 50px;
+}
+.st0 {
+    box-shadow: 1px 1px 3px #000;
+}
+.st1 {
+    transition: 0.5s ease-in-out;
+}
+.discount-percent {
+    width: 36px;
+    height: 36px;
+    border-radius: 100%;
+    color: #f27b2c;
+    position: fixed;
+    bottom: 67px;
+    right: 17px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: 12px;
+    transition: 0.5s ease-in-out;
+}
+
+/* MEDIA */
+@media screen and (max-width:540px) {
+    .confirm-order-wrapper {
+        width: 100vw;
+    }
+}
+
+@media screen and (max-width: 991px) {
+    .order-sidebar-mobile {
+        display:flex;
+    }
+    .order-sidebar {
+        display:none;
+    }
+    .order-food-mobile-menu {
+        display:flex;
+    }
+    .open-mobile-menu-order-food {
+        display:flex;
+    }
+    .menu {
+        display:none;
+    }
+    .buttons {
+        opacity: 1;
+        visibility: visible;
+    }
 }

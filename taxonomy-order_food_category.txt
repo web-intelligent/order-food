@@ -167,6 +167,15 @@ get_header();
         </div>
     <?php get_footer();?>
 	<aside class="order-sidebar-mobile">
+            <svg version="1.1" id="discount-circle" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100;" xml:space="preserve">
+            <style type="text/css">
+            .st0{fill:none;stroke:#000000;stroke-width:5;stroke-opacity:0.2;}
+            .st1{fill:none;stroke:#f27b2c;stroke-width:5;stroke-linecap:round}
+            </style>
+            <ellipse class="st1" cx="50.17" cy="50.17" rx="47.73" ry="47.73" stroke-miterlimit="0" stroke-dashoffset="310" stroke-dasharray="310"/>
+            <circle class="st0" cx="50.17" cy="50.17" r="47.73" />
+            <div class="discount-percent"></div>
+            </svg>
         <div class="open-mobile-menu-order-food"><i class="fas fa-bars"></i> Меню</div>
         <a href="#" class="mobile-basket confirm-order-btn"><i class="fas fa-shopping-basket"></i> <span class="summary">0 <i class="fas fa-ruble-sign"></i></span></a>
 	</aside>
