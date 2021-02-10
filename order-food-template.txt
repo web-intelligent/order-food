@@ -169,8 +169,8 @@
                             <div class="discount-wrapper">
                                 <div class="discount-bg"></div>
                             </div>
-                            <p class="discount-start">До скидки осталось: <span class="discount-money">3000</span> <i class="fas fa-ruble-sign"></i></p>
-                            <p style="display:none;" class="discount-finish">Ваша скидка 10%</p>
+                            <p class="discount-start" data-value="<?= get_option('discount_field_limit', 3000); ?>">До скидки осталось: <span class="discount-money"><?= get_option('discount_field_limit', 3000); ?></span> <i class="fas fa-ruble-sign"></i></p>
+                            <p style="display:none;" class="discount-finish" data-value="<?= get_option('discount_field', 10); ?>">Ваша скидка <?= get_option('discount_field', 10); ?>%</p>
                         </div>
                         <div class="widget">
                             <button class="confirm-order confirm-order-btn">Оформить заказ</button>

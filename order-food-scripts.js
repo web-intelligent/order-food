@@ -1,4 +1,7 @@
 jQuery(document).ready(function () {
+    var discountMoney = Number(jQuery('.discount-start').attr('data-value'));
+    var discountFinish = Number(jQuery('.discount-finish').attr('data-value'));
+
     var currentLocation = jQuery(location).attr('href');
     console.log(currentLocation);
     
@@ -17,7 +20,7 @@ jQuery(document).ready(function () {
         jQuery('.order-food-mobile-menu').toggleClass('order-food-mobile-menu-active');
     });
     
-    var discountMoney = Number(jQuery('.discount-money').text());
+    // var discountMoney = Number(jQuery('.discount-money').text());
 
     function countDiscount() {
         var totalSummary = Number(jQuery('.total-price .summary').text());
@@ -48,7 +51,7 @@ jQuery(document).ready(function () {
         if (dashOffsetNew <= 0) {
             $('.st1').attr('stroke-dashoffset', 0);
             $('.discount-percent').show();
-            $('.discount-percent').html('10%');
+            $('.discount-percent').html(discountFinish + '%');
         } else {
             $('.st1').attr('stroke-dashoffset', dashOffsetNew);
             $('.discount-percent').hide();
@@ -234,8 +237,8 @@ jQuery(document).ready(function () {
                         '</tr>');
                 };
                 var discount;
-                if (summary >= 3000) {
-                    discount = 10;
+                if (summary >= discountMoney) {
+                    discount = discountFinish;
                     discountSummary = summary * discount / 100;
                     summary = summary - discountSummary;
 
@@ -285,8 +288,8 @@ jQuery(document).ready(function () {
                         '</tr>');
                 };
                 var discount;
-                if (summary >= 3000) {
-                    discount = 10;
+                if (summary >= discountMoney) {
+                    discount = discountFinish;
                     discountSummary = summary * discount / 100;
                     summary = summary - discountSummary;
 
@@ -492,8 +495,8 @@ jQuery(document).ready(function () {
                     message = message + (i + 1) + ' ' + delivery.productName[i].trim() + ' ' + delivery.productPrice[i].trim() + ' x ' + delivery.productQuantity[i].trim() + '\n';
                 };
                 var discount;
-                if (summary >= 3000) {
-                    discount = 10;
+                if (summary >= discountMoney) {
+                    discount = discountFinish;
                     discountSummary = summary * discount / 100;
                     summary = summary - discountSummary;
 
@@ -515,8 +518,8 @@ jQuery(document).ready(function () {
                     message = message + (i + 1) + ' ' + order.productName[i].trim() + ' ' + order.productPrice[i].trim() + ' x ' + order.productQuantity[i].trim() + '\n';
                 };
                 var discount;
-                if (summary >= 3000) {
-                    discount = 10;
+                if (summary >= discountMoney) {
+                    discount = discountFinish;
                     discountSummary = summary * discount / 100;
                     summary = summary - discountSummary;
 
