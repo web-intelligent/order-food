@@ -483,8 +483,7 @@ jQuery(document).ready(function () {
         var clientAddress = jQuery('#clientAddress').val();
         var clientEmail = jQuery('#clientEmail').val();
         var clientDate = jQuery('#clientDate').val();
-        var clientTime = jQuery('#clientTime').val();
-        
+        var clientTime = jQuery('#clientTime').val();        
 
         if (deliveryString != '') {
             
@@ -531,14 +530,18 @@ jQuery(document).ready(function () {
                 message = message + ' ' + clientName + ' ' + clientPhone + ' ' + clientDate + ' ' + clientTime + ' ' + clientEmail ;
             }
         }
-        console.log(message);
-        jQuery.get('https://api.telegram.org/bot1592268106:AAEZ0OMoRG6LyawtMbq3oLQWBdGmJ1cb2wY/sendMessage', {chat_id:'1336055964', text:message});
+
+        if (!clientName) {
+            console.log('Вы не написали своё имя');
+        } else {
+            console.log(message);
+            jQuery.get('https://api.telegram.org/bot1592268106:AAEZ0OMoRG6LyawtMbq3oLQWBdGmJ1cb2wY/sendMessage', { chat_id: '1336055964', text: message });
         //jQuery.get('https://api.telegram.org/bot1592268106:AAEZ0OMoRG6LyawtMbq3oLQWBdGmJ1cb2wY/sendMessage', {chat_id:'783982762', text:message});
+        }
     }
 
     jQuery('#pay-order').click(function () { 
-        sendOrder();
-        
+            sendOrder();
     });
 
     console.log(jQuery('.test'));
