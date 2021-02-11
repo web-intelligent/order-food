@@ -3,18 +3,26 @@ jQuery(document).ready(function () {
     var discountFinish = Number(jQuery('.discount-finish').attr('data-value'));
 
     var currentLocation = jQuery(location).attr('href');
-    console.log(currentLocation);
-    
-    jQuery('.menu a').click(function () {
-        var currentLink = jQuery(this).attr('href');
-        console.log(currentLink);
-    });
+    $('.menu li').each(function(){
+        var link = $(this).find('a').attr('href');
+        if(currentLocation == link) {
+            $(this).find('a').addClass('active_menu_item');
+        }
+    })
 
-    jQuery('.product-img-in-loop').click(function () {
-        jQuery(this).parent().toggleClass('flex-content');
-        jQuery(this).toggleClass('full-width-product-img');
-        jQuery('body,html').toggleClass('black-body');
+    var overlay = $('.overlay');
+    overlay.hide();
+    $('.product img').click(function(e){
+        e.preventDefault;
+        $(overlay).show();
+        $(this).clone().appendTo('.pop-up');
     });
+    $('.pop-up i').click(function (e) { 
+        e.preventDefault();
+        $('.pop-up').find('img').remove();
+        overlay.hide();
+    });
+    
 
     jQuery('.open-mobile-menu-order-food').click(function () {
         jQuery('.order-food-mobile-menu').toggleClass('order-food-mobile-menu-active');
@@ -327,8 +335,61 @@ jQuery(document).ready(function () {
                     '</div>'
                 );
             }
-
         }
+    }
+
+    function removeOrderInTable() {
+        //var deliveryString = getCookie('delivery');
+        var orderString = getCookie('order');
+        summary = getCookie('summary');
+
+        if (orderString) {
+            var order = JSON.parse(orderString);
+            if (order.productId.length > 0) {
+                for (var i = 0; i < order.productId.length; i++) {
+                    var productNumber = i;
+                    jQuery('.order-table tbody').remove('<tr>' +
+                        '<th scope="row">' + productNumber + '</th>' +
+                        '<td>' + order.productName[i] + '</td>' +
+                        '<td>' + order.productPrice[i] + '</td>' +
+                        '<td>' + order.productQuantity[i] + '</td>' +
+                        '</tr>');
+                };
+                var discount;
+            
+                jQuery('.order-total-table tbody').remove(
+                    '<tr>' +
+                    '<th scope="row">Скидка: </th>' +
+                    '<td>' + discount + '%</td>' +
+                    '<td colspan="1"><b>Итого: </b></td>' +
+                    '<td>' + summary + ' <i class="fas fa-ruble-sign"></i></td>' +
+                    '</tr>'
+                );
+
+                jQuery('.props').remove(
+                    '<div class="form-group">' +
+                    '<label class="clientNameLabel">Ваше имя *</label>' +
+                    '<input id="clientName" type="text" class="form-control">' +
+                    '</div>' +
+                    '<div class="form-group">' +
+                    '<label class="clientPhoneLabel">Номер телефона *</label>' +
+                    '<input id="clientPhone" type="tel" class="form-control">' +
+                    '</div>' +
+                    '<div class="form-group">' +
+                    '<label class="clientDateLabel">Дата прибытия в ресторан</label>' +
+                    '<input id="clientDate" type="date" class="form-control">' +
+                    '</div>' +
+                    '<label class="clientTimeLabel">Время прибытия в ресторан</label>' +
+                    '<input id="clientTime" type="time" class="form-control">' +
+                    '</div>' +
+                    '<div class="form-group">' +
+                    '<label>Почтовый ящик</label>' +
+                    '<input id="clientEmail" type="email" class="form-control">' +
+                    '</div>'
+                );
+            }
+        }
+
     }
 
     // доставка
@@ -472,6 +533,10 @@ jQuery(document).ready(function () {
         loadOrderInTable();
         jQuery('.confirm-order-table').show();
     });
+    jQuery('#back-to-shop').click(function(){
+        removeOrderInTable();
+        jQuery('.confirm-order-table').hide();
+    })
 
     jQuery('.alert').hide();
 

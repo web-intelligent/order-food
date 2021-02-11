@@ -22,6 +22,11 @@
  ?>
 </ul>
 <?php get_header();?>
+<div class="overlay">
+    <div class="pop-up">
+        <i class="fas fa-times"></i>
+    </div>
+</div>
 <div style="display:none" class="confirm-window">
     <div style="display:none" class="delivery-confirm">
         Вы сделали предзаказ в ресторане. Отменить доставку?
@@ -70,6 +75,7 @@
                 </div>
             </div>
             <input id="pay-order" type="button" value="Оплатить заказ">
+            <input id="back-to-shop" type="button" value="Вернуться в магазин">
         </div>
     </div>
 </div>
