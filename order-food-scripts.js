@@ -255,15 +255,15 @@ jQuery(document).ready(function () {
                 );
                 jQuery('.props').append(
                     '<div class="form-group">' +
-                    '<label>Ваше имя *</label>' +
+                    '<label class="clientNameLabel">Ваше имя *</label>' +
                     '<input id="clientName" type="text" class="form-control">' +
                     '</div>' +
                     '<div class="form-group">' +
-                    '<label>Номер телефона *</label>' +
+                    '<label class="clientPhoneLabel">Номер телефона *</label>' +
                     '<input id="clientPhone" type="tel" class="form-control">' +
                     '</div>' +
                     '<div class="form-group">' +
-                    '<label>Адрес доставки заказа</label>' +
+                    '<label class="clientAddressLabel">Адрес доставки заказа *</label>' +
                     '<input id="clientAddress" type="text" class="form-control">' +
                     '</div>' +
                     '<div class="form-group">' +
@@ -307,18 +307,18 @@ jQuery(document).ready(function () {
 
                 jQuery('.props').append(
                     '<div class="form-group">' +
-                    '<label>Ваше имя *</label>' +
+                    '<label class="clientNameLabel">Ваше имя *</label>' +
                     '<input id="clientName" type="text" class="form-control">' +
                     '</div>' +
                     '<div class="form-group">' +
-                    '<label>Номер телефона *</label>' +
+                    '<label class="clientPhoneLabel">Номер телефона *</label>' +
                     '<input id="clientPhone" type="tel" class="form-control">' +
                     '</div>' +
                     '<div class="form-group">' +
-                    '<label>Дата прибытия в ресторан</label>' +
+                    '<label class="clientDateLabel">Дата прибытия в ресторан</label>' +
                     '<input id="clientDate" type="date" class="form-control">' +
                     '</div>' +
-                    '<label>Время прибытия в ресторан</label>' +
+                    '<label class="clientTimeLabel">Время прибытия в ресторан</label>' +
                     '<input id="clientTime" type="time" class="form-control">' +
                     '</div>' +
                     '<div class="form-group">' +
@@ -473,6 +473,8 @@ jQuery(document).ready(function () {
         jQuery('.confirm-order-table').show();
     });
 
+    jQuery('.alert').hide();
+
     function sendOrder() {
         var deliveryString = getCookie('delivery');
         var orderString = getCookie('order');
@@ -485,61 +487,103 @@ jQuery(document).ready(function () {
         var clientDate = jQuery('#clientDate').val();
         var clientTime = jQuery('#clientTime').val();
         
-
-        if (deliveryString != '') {
-            
-            var delivery = JSON.parse(deliveryString);
-            if (delivery.productId.length > 0) {
-                message = message + 'Заказ на доставку \n';
-                for (var i = 0; i < delivery.productId.length; i++) {
-                    message = message + (i + 1) + ' ' + delivery.productName[i].trim() + ' ' + delivery.productPrice[i].trim() + ' x ' + delivery.productQuantity[i].trim() + '\n';
-                };
-                var discount;
-                if (summary >= discountMoney) {
-                    discount = discountFinish;
-                    discountSummary = summary * discount / 100;
-                    summary = summary - discountSummary;
-
+            if (deliveryString != '') {
+                if(!clientName) {
+                    jQuery('.alert').show();
+                    jQuery('.alert .error_message').html('Вы забыли написать своё имя');
+                    jQuery('.clientNameLabel').css('color', 'red');
+                } else if(!clientPhone) {
+                    jQuery('.alert').show();
+                    jQuery('.alert .error_message').html('Вы забыли указать номер телефона');
+                    jQuery('.clientPhoneLabel').css('color', 'red');
+                } else if(!clientAddress) {
+                    jQuery('.alert').show();
+                    jQuery('.alert .error_message').html('Вы не указали адрес доставки');
+                    jQuery('.clientAddressLabel').css('color', 'red');
                 } else {
-                    discount = 0;
+                    jQuery('.clientPhoneLabel').css('color', 'green');
+                    jQuery('.clientNameLabel').css('color', 'green');
+                    jQuery('.clientAddressLabel').css('color', 'green');
+                    jQuery('.alert').hide();
+
+                    var delivery = JSON.parse(deliveryString);
+                    if (delivery.productId.length > 0) {
+                        message = message + 'Заказ на доставку \n';
+                        for (var i = 0; i < delivery.productId.length; i++) {
+                            message = message + (i + 1) + ' ' + delivery.productName[i].trim() + ' ' + delivery.productPrice[i].trim() + ' x ' + delivery.productQuantity[i].trim() + '\n';
+                        };
+                        var discount;
+                        if (summary >= discountMoney) {
+                            discount = discountFinish;
+                            discountSummary = summary * discount / 100;
+                            summary = summary - discountSummary;
+        
+                        } else {
+                            discount = 0;
+                        }
+        
+                        message = message + 'ИТОГО: ' + summary + ' Со скидкой ' + discount + '%' + '\n';
+                        message = message + ' ' + clientName + ' ' + clientPhone + ' ' + clientAddress + ' ' + clientEmail;
+        
+                        jQuery.get('https://api.telegram.org/bot1592268106:AAEZ0OMoRG6LyawtMbq3oLQWBdGmJ1cb2wY/sendMessage', {chat_id:'1336055964', text:message});
+                    }
                 }
-
-                message = message + 'ИТОГО: ' + summary + ' Со скидкой ' + discount + '%' + '\n';
-                message = message + ' ' + clientName + ' ' + clientPhone + ' ' + clientAddress + ' ' + clientEmail ;
             }
-
-        }
+       
 
         if (orderString != '') {
-            var order = JSON.parse(orderString);
-            if (order.productId.length > 0) {
-                message = message + 'Предзаказ в ресторане \n';
-                for (var i = 0; i < order.productId.length; i++) {
-                    message = message + (i + 1) + ' ' + order.productName[i].trim() + ' ' + order.productPrice[i].trim() + ' x ' + order.productQuantity[i].trim() + '\n';
-                };
-                var discount;
-                if (summary >= discountMoney) {
-                    discount = discountFinish;
-                    discountSummary = summary * discount / 100;
-                    summary = summary - discountSummary;
+            if(!clientName) {
+                jQuery('.alert').show();
+                jQuery('.alert .error_message').html('Вы забыли написать своё имя');
+                jQuery('.clientNameLabel').css('color', 'red');
+            } else if(!clientPhone) {
+                jQuery('.alert').show();
+                jQuery('.alert .error_message').html('Вы забыли указать номер телефона');
+                jQuery('.clientPhoneLabel').css('color', 'red');
+            } else if(!clientDate) {
+                jQuery('.alert').show();
+                jQuery('.alert .error_message').html('Вы забыли указать дату прибытия в ресторан');
+                jQuery('.clientDateLabel').css('color', 'red');
+            } else if(!clientTime) {
+                jQuery('.alert').show();
+                jQuery('.alert .error_message').html('Вы забыли указать время прибытия в ресторан');
+                jQuery('.clientTimeLabel').css('color', 'red');
+            } else {
+                jQuery('.clientNameLabel').css('color', 'green');
+                jQuery('.clientPhoneLabel').css('color', 'green');
+                jQuery('.clientDateLabel').css('color', 'green');
+                jQuery('.clientTimeLabel').css('color', 'green');
+                jQuery('.alert').hide();
+                var order = JSON.parse(orderString);
+                if (order.productId.length > 0) {
+                    message = message + 'Предзаказ в ресторане \n';
+                    for (var i = 0; i < order.productId.length; i++) {
+                        message = message + (i + 1) + ' ' + order.productName[i].trim() + ' ' + order.productPrice[i].trim() + ' x ' + order.productQuantity[i].trim() + '\n';
+                    };
+                    var discount;
+                    if (summary >= discountMoney) {
+                        discount = discountFinish;
+                        discountSummary = summary * discount / 100;
+                        summary = summary - discountSummary;
 
-                } else {
-                    discount = 0;
+                    } else {
+                        discount = 0;
+                    }
+
+                    message = message + 'ИТОГО: ' + summary + ' Со скидкой ' + discount + '%' + '\n';
+                    message = message + ' ' + clientName + ' ' + clientPhone + ' ' + clientDate + ' ' + clientTime + ' ' + clientEmail;
+
+                    jQuery.get('https://api.telegram.org/bot1592268106:AAEZ0OMoRG6LyawtMbq3oLQWBdGmJ1cb2wY/sendMessage', {chat_id:'1336055964', text:message});
                 }
-
-                message = message + 'ИТОГО: ' + summary + ' Со скидкой ' + discount + '%' + '\n';
-                message = message + ' ' + clientName + ' ' + clientPhone + ' ' + clientDate + ' ' + clientTime + ' ' + clientEmail ;
             }
         }
-        console.log(message);
-        jQuery.get('https://api.telegram.org/bot1592268106:AAEZ0OMoRG6LyawtMbq3oLQWBdGmJ1cb2wY/sendMessage', {chat_id:'1336055964', text:message});
+
+        // jQuery.get('https://api.telegram.org/bot1592268106:AAEZ0OMoRG6LyawtMbq3oLQWBdGmJ1cb2wY/sendMessage', {chat_id:'1336055964', text:message});
         //jQuery.get('https://api.telegram.org/bot1592268106:AAEZ0OMoRG6LyawtMbq3oLQWBdGmJ1cb2wY/sendMessage', {chat_id:'783982762', text:message});
+
     }
 
     jQuery('#pay-order').click(function () { 
         sendOrder();
-        
     });
-
-    console.log(jQuery('.test'));
 });
