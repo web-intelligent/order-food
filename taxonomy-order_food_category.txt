@@ -57,6 +57,7 @@ get_header();
                         <tbody>
                         </tbody>
                     </table>
+                    <div class="delivery-methods"></div>
                     <div class="alert alert-danger" role="alert">
                         <strong>Внимание!</strong> <p class="error_message"></p>
                     </div>

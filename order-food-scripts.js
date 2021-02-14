@@ -261,7 +261,20 @@ jQuery(document).ready(function () {
                     '<td>' + summary + ' <i class="fas fa-ruble-sign"></i></td>' +
                     '</tr>'
                 );
-                jQuery('.props').append(
+                jQuery('.delivery-methods').append(
+                    '<div class="delivering-methods">' + 
+                    '<h4>Выберите способ доставки</h4>' +
+                    '<form>' +
+                    '<div class="d-flex flex-column">' +
+                    '<label><input class="delivery-method" type="radio" name="delivery-method" value="pickup"> Самовывоз</label>' + 
+                    '<label><input class="delivery-method" type="radio" name="delivery-method" value="delivering"> Доставка курьером</label>' +
+                    '</div>'+
+                    '</form>' + 
+                    '</div>'
+                );
+
+                var deliveringInfo =
+                    '<div class="deliveryInfo">' +
                     '<div class="form-group">' +
                     '<label class="clientNameLabel">Ваше имя *</label>' +
                     '<input id="clientName" type="text" class="form-control">' +
@@ -277,8 +290,33 @@ jQuery(document).ready(function () {
                     '<div class="form-group">' +
                     '<label>Почтовый ящик</label>' +
                     '<input id="clientEmail" type="email" class="form-control">' +
-                    '</div>'
-                );
+                    '</div>' +
+                    '</div>';
+
+                var pickUpInfo = 
+                    '<div class="pickUpInfo">' +
+                        '<div class="form-group">' +
+                            '<label class="clientNameLabel">Ваше имя *</label>' +
+                            '<input id="clientName" type="text" class="form-control">' +
+                        '</div>' +
+                        '<div class="form-group">' +
+                            '<label class="clientPhoneLabel">Номер телефона *</label>' +
+                            '<input id="clientPhone" type="tel" class="form-control">' +
+                        '</div>' +
+                    '</div>';
+                
+                $('.delivery-method').click(function () { 
+                    if($('input[value="delivering"]').is(':checked')) {
+                        jQuery('.props').append($(deliveringInfo));
+                        jQuery('.pickUpInfo').remove();
+                        console.log($(deliveringInfo));
+                    }
+                    if($('input[value="pickup"]').is(':checked')) {
+                        jQuery('.props').append($(pickUpInfo));
+                        jQuery('.deliveryInfo').remove();
+                        console.log($(deliveringInfo));
+                    }
+                });  
             }
 
         }
@@ -326,6 +364,7 @@ jQuery(document).ready(function () {
                     '<label class="clientDateLabel">Дата прибытия в ресторан</label>' +
                     '<input id="clientDate" type="date" class="form-control">' +
                     '</div>' +
+                    '<div class="form-group">' +
                     '<label class="clientTimeLabel">Время прибытия в ресторан</label>' +
                     '<input id="clientTime" type="time" class="form-control">' +
                     '</div>' +
@@ -339,54 +378,26 @@ jQuery(document).ready(function () {
     }
 
     function removeOrderInTable() {
-        //var deliveryString = getCookie('delivery');
+        var deliveryString = getCookie('delivery');
         var orderString = getCookie('order');
         summary = getCookie('summary');
 
         if (orderString) {
             var order = JSON.parse(orderString);
             if (order.productId.length > 0) {
-                for (var i = 0; i < order.productId.length; i++) {
-                    var productNumber = i;
-                    jQuery('.order-table tbody').remove('<tr>' +
-                        '<th scope="row">' + productNumber + '</th>' +
-                        '<td>' + order.productName[i] + '</td>' +
-                        '<td>' + order.productPrice[i] + '</td>' +
-                        '<td>' + order.productQuantity[i] + '</td>' +
-                        '</tr>');
-                };
-                var discount;
-            
-                jQuery('.order-total-table tbody').remove(
-                    '<tr>' +
-                    '<th scope="row">Скидка: </th>' +
-                    '<td>' + discount + '%</td>' +
-                    '<td colspan="1"><b>Итого: </b></td>' +
-                    '<td>' + summary + ' <i class="fas fa-ruble-sign"></i></td>' +
-                    '</tr>'
-                );
+                jQuery('.order-table tbody tr').remove();
+                jQuery('.order-total-table tbody tr').remove();
+                jQuery('.props .form-group').remove();
+            }
+        }
 
-                jQuery('.props').remove(
-                    '<div class="form-group">' +
-                    '<label class="clientNameLabel">Ваше имя *</label>' +
-                    '<input id="clientName" type="text" class="form-control">' +
-                    '</div>' +
-                    '<div class="form-group">' +
-                    '<label class="clientPhoneLabel">Номер телефона *</label>' +
-                    '<input id="clientPhone" type="tel" class="form-control">' +
-                    '</div>' +
-                    '<div class="form-group">' +
-                    '<label class="clientDateLabel">Дата прибытия в ресторан</label>' +
-                    '<input id="clientDate" type="date" class="form-control">' +
-                    '</div>' +
-                    '<label class="clientTimeLabel">Время прибытия в ресторан</label>' +
-                    '<input id="clientTime" type="time" class="form-control">' +
-                    '</div>' +
-                    '<div class="form-group">' +
-                    '<label>Почтовый ящик</label>' +
-                    '<input id="clientEmail" type="email" class="form-control">' +
-                    '</div>'
-                );
+        if (deliveryString) {
+            var delivery = JSON.parse(deliveryString);
+            if (delivery.productId.length > 0) {
+                jQuery('.order-table tbody tr').remove();
+                jQuery('.order-total-table tbody tr').remove();
+                jQuery('.props .form-group').remove();
+                jQuery('.delivery-methods .delivering-methods').remove();
             }
         }
 
@@ -553,6 +564,71 @@ jQuery(document).ready(function () {
         var clientTime = jQuery('#clientTime').val();
         
             if (deliveryString != '') {
+                
+                var delivery = JSON.parse(deliveryString);
+                if (delivery.productId.length > 0) {
+                    console.log('1');
+                    if(!clientName && $('input[value="delivering"]').is(':checked')) {
+                        jQuery('.alert').show();
+                        jQuery('.alert .error_message').html('Вы забыли написать своё имя');
+                        jQuery('.clientNameLabel').css('color', 'red');
+                    } else if(!clientName && $('input[value="pickup"]').is(':checked')) {
+                        jQuery('.alert').show();
+                        jQuery('.alert .error_message').html('Вы забыли написать своё имя');
+                        jQuery('.clientNameLabel').css('color', 'red');
+                    } else if(!clientPhone && $('input[value="delivering"]').is(':checked')) {
+                        jQuery('.alert').show();
+                        jQuery('.alert .error_message').html('Вы забыли указать номер телефона');
+                        jQuery('.clientPhoneLabel').css('color', 'red');
+                    } else if(!clientPhone && $('input[value="pickup"]').is(':checked')) {
+                        jQuery('.alert').show();
+                        jQuery('.alert .error_message').html('Вы забыли указать номер телефона');
+                        jQuery('.clientPhoneLabel').css('color', 'red');
+                    } else if(!clientAddress && $('input[value="delivering"]').is(':checked')) {
+                        jQuery('.alert').show();
+                        jQuery('.alert .error_message').html('Вы не указали адрес доставки');
+                        jQuery('.clientAddressLabel').css('color', 'red');
+                    } else {
+                        jQuery('.clientPhoneLabel').css('color', 'green');
+                        jQuery('.clientNameLabel').css('color', 'green');
+                        jQuery('.clientAddressLabel').css('color', 'green');
+                        jQuery('.alert').hide();
+    
+                        var delivery = JSON.parse(deliveryString);
+                        if (delivery.productId.length > 0) {
+                            if($('input[value="delivering"]').is(':checked')) {
+                                message = message + 'Заказ на доставку \n'
+                            }
+                            if($('input[value="pickup"]').is(':checked')) {
+                                message = message + 'Заказ на самовывоз \n'
+                            }
+                            for (var i = 0; i < delivery.productId.length; i++) {
+                                message = message + (i + 1) + ' ' + '"' + delivery.productName[i].trim() + '"' + ' ' + delivery.productPrice[i].trim() + 'руб.' + ' x ' + delivery.productQuantity[i].trim() + '\n';
+                            };
+                            var discount;
+                            if (summary >= discountMoney) {
+                                discount = discountFinish;
+                                discountSummary = summary * discount / 100;
+                                summary = summary - discountSummary;
+            
+                            } else {
+                                discount = 0;
+                            }
+                            
+                            message = message + 'ИТОГО: ' + summary + 'руб. ' + '\n' + 'Со скидкой ' + discount + '%' + '\n';
+                            message = message + 'Имя: ' + (clientName == undefined ? '' : (clientName + '\n')) + 'Номер телефона: ' + clientPhone + '\n' + 'Адрес: ' + (clientAddress == undefined ? 'Не указан \n' : (clientAddress) + '\n') + 'Почтовый ящик: ' + (clientEmail == undefined ? 'Не указан' : (clientEmail));
+            
+                            jQuery.get('https://api.telegram.org/bot1592268106:AAEZ0OMoRG6LyawtMbq3oLQWBdGmJ1cb2wY/sendMessage', {chat_id:'1336055964', text:message});
+                        }
+                    }
+                }
+            }
+       
+
+        if (orderString != '') {
+            var order = JSON.parse(orderString);
+            if (order.productId.length > 0) {
+                console.log('2');
                 if(!clientName) {
                     jQuery('.alert').show();
                     jQuery('.alert .error_message').html('Вы забыли написать своё имя');
@@ -561,86 +637,44 @@ jQuery(document).ready(function () {
                     jQuery('.alert').show();
                     jQuery('.alert .error_message').html('Вы забыли указать номер телефона');
                     jQuery('.clientPhoneLabel').css('color', 'red');
-                } else if(!clientAddress) {
+                } else if(!clientDate) {
                     jQuery('.alert').show();
-                    jQuery('.alert .error_message').html('Вы не указали адрес доставки');
-                    jQuery('.clientAddressLabel').css('color', 'red');
+                    jQuery('.alert .error_message').html('Вы забыли указать дату прибытия в ресторан');
+                    jQuery('.clientDateLabel').css('color', 'red');
+                } else if(!clientTime) {
+                    jQuery('.alert').show();
+                    jQuery('.alert .error_message').html('Вы забыли указать время прибытия в ресторан');
+                    jQuery('.clientTimeLabel').css('color', 'red');
                 } else {
-                    jQuery('.clientPhoneLabel').css('color', 'green');
                     jQuery('.clientNameLabel').css('color', 'green');
-                    jQuery('.clientAddressLabel').css('color', 'green');
+                    jQuery('.clientPhoneLabel').css('color', 'green');
+                    jQuery('.clientDateLabel').css('color', 'green');
+                    jQuery('.clientTimeLabel').css('color', 'green');
                     jQuery('.alert').hide();
-
-                    var delivery = JSON.parse(deliveryString);
-                    if (delivery.productId.length > 0) {
-                        message = message + 'Заказ на доставку \n';
-                        for (var i = 0; i < delivery.productId.length; i++) {
-                            message = message + (i + 1) + ' ' + delivery.productName[i].trim() + ' ' + delivery.productPrice[i].trim() + ' x ' + delivery.productQuantity[i].trim() + '\n';
+                    var order = JSON.parse(orderString);
+                    if (order.productId.length > 0) {
+                        message = message + 'Предзаказ в ресторане \n';
+                        for (var i = 0; i < order.productId.length; i++) {
+                            message = message + (i + 1) + ' ' + '"' + order.productName[i].trim() + '"' + ' ' + order.productPrice[i].trim() + 'руб.' + ' x ' + order.productQuantity[i].trim() + '\n';
                         };
                         var discount;
                         if (summary >= discountMoney) {
                             discount = discountFinish;
                             discountSummary = summary * discount / 100;
                             summary = summary - discountSummary;
-        
+    
                         } else {
                             discount = 0;
                         }
-        
-                        message = message + 'ИТОГО: ' + summary + ' Со скидкой ' + discount + '%' + '\n';
-                        message = message + ' ' + clientName + ' ' + clientPhone + ' ' + clientAddress + ' ' + clientEmail;
-        
+    
+                        message = message + 'ИТОГО: ' + summary + 'руб.' + ' Со скидкой ' + discount + '%' + '\n';
+                        message = message + ' ' + 'Имя: ' + clientName + '\n ' + 'Номер телефона: ' + clientPhone + '\n ' + 'Дата прибытия: ' + clientDate + '\n ' + 'Время прибытия: ' + clientTime + '\n' + (clientEmail == undefined ? 'Не указан' : (clientEmail));
+    
                         jQuery.get('https://api.telegram.org/bot1592268106:AAEZ0OMoRG6LyawtMbq3oLQWBdGmJ1cb2wY/sendMessage', {chat_id:'1336055964', text:message});
                     }
                 }
             }
-       
-
-        if (orderString != '') {
-            if(!clientName) {
-                jQuery('.alert').show();
-                jQuery('.alert .error_message').html('Вы забыли написать своё имя');
-                jQuery('.clientNameLabel').css('color', 'red');
-            } else if(!clientPhone) {
-                jQuery('.alert').show();
-                jQuery('.alert .error_message').html('Вы забыли указать номер телефона');
-                jQuery('.clientPhoneLabel').css('color', 'red');
-            } else if(!clientDate) {
-                jQuery('.alert').show();
-                jQuery('.alert .error_message').html('Вы забыли указать дату прибытия в ресторан');
-                jQuery('.clientDateLabel').css('color', 'red');
-            } else if(!clientTime) {
-                jQuery('.alert').show();
-                jQuery('.alert .error_message').html('Вы забыли указать время прибытия в ресторан');
-                jQuery('.clientTimeLabel').css('color', 'red');
-            } else {
-                jQuery('.clientNameLabel').css('color', 'green');
-                jQuery('.clientPhoneLabel').css('color', 'green');
-                jQuery('.clientDateLabel').css('color', 'green');
-                jQuery('.clientTimeLabel').css('color', 'green');
-                jQuery('.alert').hide();
-                var order = JSON.parse(orderString);
-                if (order.productId.length > 0) {
-                    message = message + 'Предзаказ в ресторане \n';
-                    for (var i = 0; i < order.productId.length; i++) {
-                        message = message + (i + 1) + ' ' + order.productName[i].trim() + ' ' + order.productPrice[i].trim() + ' x ' + order.productQuantity[i].trim() + '\n';
-                    };
-                    var discount;
-                    if (summary >= discountMoney) {
-                        discount = discountFinish;
-                        discountSummary = summary * discount / 100;
-                        summary = summary - discountSummary;
-
-                    } else {
-                        discount = 0;
-                    }
-
-                    message = message + 'ИТОГО: ' + summary + ' Со скидкой ' + discount + '%' + '\n';
-                    message = message + ' ' + clientName + ' ' + clientPhone + ' ' + clientDate + ' ' + clientTime + ' ' + clientEmail;
-
-                    jQuery.get('https://api.telegram.org/bot1592268106:AAEZ0OMoRG6LyawtMbq3oLQWBdGmJ1cb2wY/sendMessage', {chat_id:'1336055964', text:message});
-                }
-            }
+            
         }
 
         // jQuery.get('https://api.telegram.org/bot1592268106:AAEZ0OMoRG6LyawtMbq3oLQWBdGmJ1cb2wY/sendMessage', {chat_id:'1336055964', text:message});
