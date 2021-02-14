@@ -134,12 +134,12 @@
                                 <?php 
                                     if(get_post_meta(get_the_ID(), 'Предзаказ', true) == 1) {
                                 ?>
-                                    <div class="order">Предзаказ</div>
+                                    <div class="order" style="background: <?= get_option('btn_field', '#f27b2c') ?>">Предзаказ</div>
                                 <?php
                                     }
                                     if(get_post_meta(get_the_ID(), 'Доставка', true) == 1) {
                                 ?>
-                                    <div class="delivery">Доставка</div>
+                                    <div class="delivery" style="background: <?= get_option('btn_field', '#f27b2c') ?>">Доставка</div>
                                     
                                 <?php 
                                     }

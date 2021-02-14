@@ -88,12 +88,13 @@ function order_food_settings_function() {
 
 add_action('admin_init', 'setup_order_food_settings');
 function setup_order_food_settings(){
-	// register_setting('order_food_settings', 'order_food_settings', '', 'settings');
 	add_settings_section('order_food_settings', 'Настройки', '', 'settings');
 	add_settings_field('discount_field', 'Размер скидки', 'discount_field_show', 'settings', 'order_food_settings');
 	add_settings_field('discount_field_limit', 'Минимальная сумма покупкии для скидки', 'discount_field_limit_show', 'settings', 'order_food_settings');
+	add_settings_field('btn-color', 'Цвет кнопок', 'btn_field_show', 'settings', 'order_food_settings');
 	register_setting('order_food_settings', 'discount_field');
 	register_setting('order_food_settings', 'discount_field_limit');
+	register_setting('order_food_settings', 'btn-color');
 }
 
 function discount_field_show() {
@@ -101,6 +102,9 @@ function discount_field_show() {
 }
 function discount_field_limit_show() {
 	echo '<input name="discount_field_limit" type="text" value="'. get_option('discount_field_limit', 3000) .'"> рублей';
+}
+function btn_field_show() {
+	echo '<input name="btn_field" type="color" value="'. get_option('btn_field', '#f27b2c') .'">';
 }
 
 add_action('add_meta_boxes', 'add_meta_box_order_food');
