@@ -304,19 +304,41 @@ jQuery(document).ready(function () {
                             '<input id="clientPhone" type="tel" class="form-control">' +
                         '</div>' +
                     '</div>';
-                
-                $('.delivery-method').click(function () { 
-                    if($('input[value="delivering"]').is(':checked')) {
+
+                $('input[value="delivering"]').click(function () {
+                    if (jQuery('.props').next().hasClass('deliveryInfo')) {
+                        jQuery('.props').next('deliveryInfo').remove();
+                        console.log(2);
+                    } else {
                         jQuery('.props').append($(deliveringInfo));
+                        console.log(2.5);
+                    }
+                    if (jQuery('.props').next().hasClass('pickUpInfo')) {
                         jQuery('.pickUpInfo').remove();
-                        console.log($(deliveringInfo));
+                        console.log(3);
                     }
-                    if($('input[value="pickup"]').is(':checked')) {
-                        jQuery('.props').append($(pickUpInfo));
-                        jQuery('.deliveryInfo').remove();
-                        console.log($(deliveringInfo));
-                    }
-                });  
+                    
+                });
+                
+                // $('.delivery-method').click(function () { 
+                //     if ($('input[value="delivering"]').is(':checked') && !jQuery('.props').next().hasClass('deliveryInfo')) {
+                //         console.log(1);
+                //         jQuery('.props').append($(deliveringInfo));
+                //         jQuery('.pickUpInfo').remove();
+                //     } else {
+                //         console.log(3);
+                //         jQuery('.pickUpInfo').remove();
+                //     }
+                //     if ($('input[value="pickup"]').is(':checked') && !jQuery('.props').next().hasClass('pickUpInfo')) {
+                //         console.log(2);
+                //         jQuery('.props').append($(pickUpInfo));
+                //         jQuery('.pickUpInfo').remove();
+                        
+                //     } else {
+                //         console.log(4);
+                //         jQuery('.deliveryInfo').remove();
+                //     }
+                // });  
             }
 
         }
@@ -568,57 +590,63 @@ jQuery(document).ready(function () {
                 var delivery = JSON.parse(deliveryString);
                 if (delivery.productId.length > 0) {
                     console.log('1');
-                    if(!clientName && $('input[value="delivering"]').is(':checked')) {
+                    if (!$('input[name="delivery-method"]').is(':checked')) {
                         jQuery('.alert').show();
-                        jQuery('.alert .error_message').html('Вы забыли написать своё имя');
-                        jQuery('.clientNameLabel').css('color', 'red');
-                    } else if(!clientName && $('input[value="pickup"]').is(':checked')) {
-                        jQuery('.alert').show();
-                        jQuery('.alert .error_message').html('Вы забыли написать своё имя');
-                        jQuery('.clientNameLabel').css('color', 'red');
-                    } else if(!clientPhone && $('input[value="delivering"]').is(':checked')) {
-                        jQuery('.alert').show();
-                        jQuery('.alert .error_message').html('Вы забыли указать номер телефона');
-                        jQuery('.clientPhoneLabel').css('color', 'red');
-                    } else if(!clientPhone && $('input[value="pickup"]').is(':checked')) {
-                        jQuery('.alert').show();
-                        jQuery('.alert .error_message').html('Вы забыли указать номер телефона');
-                        jQuery('.clientPhoneLabel').css('color', 'red');
-                    } else if(!clientAddress && $('input[value="delivering"]').is(':checked')) {
-                        jQuery('.alert').show();
-                        jQuery('.alert .error_message').html('Вы не указали адрес доставки');
-                        jQuery('.clientAddressLabel').css('color', 'red');
+                        jQuery('.alert .error_message').html('Выберите способ доставки');
                     } else {
-                        jQuery('.clientPhoneLabel').css('color', 'green');
-                        jQuery('.clientNameLabel').css('color', 'green');
-                        jQuery('.clientAddressLabel').css('color', 'green');
                         jQuery('.alert').hide();
-    
-                        var delivery = JSON.parse(deliveryString);
-                        if (delivery.productId.length > 0) {
-                            if($('input[value="delivering"]').is(':checked')) {
-                                message = message + 'Заказ на доставку \n'
+                        if (!clientName && $('input[value="delivering"]').is(':checked')) {
+                            jQuery('.alert').show();
+                            jQuery('.alert .error_message').html('Вы забыли написать своё имя');
+                            jQuery('.clientNameLabel').css('color', 'red');
+                        } else if (!clientName && $('input[value="pickup"]').is(':checked')) {
+                            jQuery('.alert').show();
+                            jQuery('.alert .error_message').html('Вы забыли написать своё имя');
+                            jQuery('.clientNameLabel').css('color', 'red');
+                        } else if (!clientPhone && $('input[value="delivering"]').is(':checked')) {
+                            jQuery('.alert').show();
+                            jQuery('.alert .error_message').html('Вы забыли указать номер телефона');
+                            jQuery('.clientPhoneLabel').css('color', 'red');
+                        } else if (!clientPhone && $('input[value="pickup"]').is(':checked')) {
+                            jQuery('.alert').show();
+                            jQuery('.alert .error_message').html('Вы забыли указать номер телефона');
+                            jQuery('.clientPhoneLabel').css('color', 'red');
+                        } else if (!clientAddress && $('input[value="delivering"]').is(':checked')) {
+                            jQuery('.alert').show();
+                            jQuery('.alert .error_message').html('Вы не указали адрес доставки');
+                            jQuery('.clientAddressLabel').css('color', 'red');
+                        } else {
+                            jQuery('.clientPhoneLabel').css('color', 'green');
+                            jQuery('.clientNameLabel').css('color', 'green');
+                            jQuery('.clientAddressLabel').css('color', 'green');
+                            jQuery('.alert').hide();
+
+                            var delivery = JSON.parse(deliveryString);
+                            if (delivery.productId.length > 0) {
+                                if ($('input[value="delivering"]').is(':checked')) {
+                                    message = message + 'Заказ на доставку \n'
+                                }
+                                if ($('input[value="pickup"]').is(':checked')) {
+                                    message = message + 'Заказ на самовывоз \n'
+                                }
+                                for (var i = 0; i < delivery.productId.length; i++) {
+                                    message = message + (i + 1) + ' ' + '"' + delivery.productName[i].trim() + '"' + ' ' + delivery.productPrice[i].trim() + 'руб.' + ' x ' + delivery.productQuantity[i].trim() + '\n';
+                                };
+                                var discount;
+                                if (summary >= discountMoney) {
+                                    discount = discountFinish;
+                                    discountSummary = summary * discount / 100;
+                                    summary = summary - discountSummary;
+
+                                } else {
+                                    discount = 0;
+                                }
+
+                                message = message + 'ИТОГО: ' + summary + 'руб. ' + '\n' + 'Со скидкой ' + discount + '%' + '\n';
+                                message = message + 'Имя: ' + (clientName == undefined ? '' : (clientName + '\n')) + 'Номер телефона: ' + clientPhone + '\n' + 'Адрес: ' + (clientAddress == undefined ? 'Не указан \n' : (clientAddress) + '\n') + 'Почтовый ящик: ' + (clientEmail == undefined ? 'Не указан' : (clientEmail));
+
+                                jQuery.get('https://api.telegram.org/bot1592268106:AAEZ0OMoRG6LyawtMbq3oLQWBdGmJ1cb2wY/sendMessage', { chat_id: '1336055964', text: message });
                             }
-                            if($('input[value="pickup"]').is(':checked')) {
-                                message = message + 'Заказ на самовывоз \n'
-                            }
-                            for (var i = 0; i < delivery.productId.length; i++) {
-                                message = message + (i + 1) + ' ' + '"' + delivery.productName[i].trim() + '"' + ' ' + delivery.productPrice[i].trim() + 'руб.' + ' x ' + delivery.productQuantity[i].trim() + '\n';
-                            };
-                            var discount;
-                            if (summary >= discountMoney) {
-                                discount = discountFinish;
-                                discountSummary = summary * discount / 100;
-                                summary = summary - discountSummary;
-            
-                            } else {
-                                discount = 0;
-                            }
-                            
-                            message = message + 'ИТОГО: ' + summary + 'руб. ' + '\n' + 'Со скидкой ' + discount + '%' + '\n';
-                            message = message + 'Имя: ' + (clientName == undefined ? '' : (clientName + '\n')) + 'Номер телефона: ' + clientPhone + '\n' + 'Адрес: ' + (clientAddress == undefined ? 'Не указан \n' : (clientAddress) + '\n') + 'Почтовый ящик: ' + (clientEmail == undefined ? 'Не указан' : (clientEmail));
-            
-                            jQuery.get('https://api.telegram.org/bot1592268106:AAEZ0OMoRG6LyawtMbq3oLQWBdGmJ1cb2wY/sendMessage', {chat_id:'1336055964', text:message});
                         }
                     }
                 }
@@ -683,6 +711,14 @@ jQuery(document).ready(function () {
     }
 
     jQuery('#pay-order').click(function () { 
-        sendOrder();
+        if (!sendOrder()) {
+            console.log('test')
+        } else {
+            deleteCookie('delivery');
+            deleteCookie('order');
+            removeOrderInTable();
+            jQuery('.confirm-order-table').hide();
+        }
+        
     });
 });
