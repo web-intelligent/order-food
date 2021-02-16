@@ -79,10 +79,16 @@ jQuery(document).ready(function () {
         else return "";
     }
 
+    // function deleteCookie(name) {
+    //     var date = new Date(); // Берём текущую дату
+    //     date.setTime(date.getTime() - 1); // Возвращаемся в "прошлое"
+    //     document.cookie = name += "=; expires=" + date.toGMTString(); // Устанавливаем cookie пустое значение и срок действия до прошедшего уже времени
+    // }
+
     function deleteCookie(name) {
-        var date = new Date(); // Берём текущую дату
-        date.setTime(date.getTime() - 1); // Возвращаемся в "прошлое"
-        document.cookie = name += "=; expires=" + date.toGMTString(); // Устанавливаем cookie пустое значение и срок действия до прошедшего уже времени
+        setCookie(name, "", {
+            'max-age': -1
+        })
     }
 
 
@@ -303,21 +309,22 @@ jQuery(document).ready(function () {
                             '<label class="clientPhoneLabel">Номер телефона *</label>' +
                             '<input id="clientPhone" type="tel" class="form-control">' +
                         '</div>' +
+                        '<div class="form-group">' +
+                            '<label class="clientPhoneLabel">Когда приедите за заказом? *</label>' +
+                            '<input id="clientDate" type="date" class="form-control">' +
+                        '</div>'
                     '</div>';
 
                 $('input[value="delivering"]').click(function () {
-                    if (jQuery('.props').next().hasClass('deliveryInfo')) {
-                        jQuery('.props').next('deliveryInfo').remove();
-                        console.log(2);
-                    } else {
-                        jQuery('.props').append($(deliveringInfo));
-                        console.log(2.5);
-                    }
-                    if (jQuery('.props').next().hasClass('pickUpInfo')) {
-                        jQuery('.pickUpInfo').remove();
-                        console.log(3);
-                    }
-                    
+                    $('.pickUpInfo').remove();
+                    $('.deliveryInfo').remove();
+                    $('.props').append($(deliveringInfo));
+                });
+
+                $('input[value="pickup"]').click(function () {
+                    $('.deliveryInfo').remove();
+                    $('.pickUpInfo').remove();
+                    $('.props').append($(pickUpInfo));
                 });
                 
                 // $('.delivery-method').click(function () { 
@@ -589,7 +596,6 @@ jQuery(document).ready(function () {
                 
                 var delivery = JSON.parse(deliveryString);
                 if (delivery.productId.length > 0) {
-                    console.log('1');
                     if (!$('input[name="delivery-method"]').is(':checked')) {
                         jQuery('.alert').show();
                         jQuery('.alert .error_message').html('Выберите способ доставки');
@@ -646,6 +652,14 @@ jQuery(document).ready(function () {
                                 message = message + 'Имя: ' + (clientName == undefined ? '' : (clientName + '\n')) + 'Номер телефона: ' + clientPhone + '\n' + 'Адрес: ' + (clientAddress == undefined ? 'Не указан \n' : (clientAddress) + '\n') + 'Почтовый ящик: ' + (clientEmail == undefined ? 'Не указан' : (clientEmail));
 
                                 jQuery.get('https://api.telegram.org/bot1592268106:AAEZ0OMoRG6LyawtMbq3oLQWBdGmJ1cb2wY/sendMessage', { chat_id: '1336055964', text: message });
+
+                                deleteCookie('delivery');
+                                deleteCookie('order');
+                                deleteCookie('summary');
+                                location.reload();
+                                setTimeout(function () {
+                                    jQuery('.confirm-order-table').hide();
+                                }, 4000)
                             }
                         }
                     }
@@ -699,10 +713,17 @@ jQuery(document).ready(function () {
                         message = message + ' ' + 'Имя: ' + clientName + '\n ' + 'Номер телефона: ' + clientPhone + '\n ' + 'Дата прибытия: ' + clientDate + '\n ' + 'Время прибытия: ' + clientTime + '\n' + (clientEmail == undefined ? 'Не указан' : (clientEmail));
     
                         jQuery.get('https://api.telegram.org/bot1592268106:AAEZ0OMoRG6LyawtMbq3oLQWBdGmJ1cb2wY/sendMessage', {chat_id:'1336055964', text:message});
+
+                        deleteCookie('delivery');
+                        deleteCookie('order');
+                        location.reload();
+                        setTimeout(function () {
+                            jQuery('.confirm-order-table').hide(); 
+                        }, 4000)
+                        
                     }
                 }
             }
-            
         }
 
         // jQuery.get('https://api.telegram.org/bot1592268106:AAEZ0OMoRG6LyawtMbq3oLQWBdGmJ1cb2wY/sendMessage', {chat_id:'1336055964', text:message});
@@ -711,14 +732,6 @@ jQuery(document).ready(function () {
     }
 
     jQuery('#pay-order').click(function () { 
-        if (!sendOrder()) {
-            console.log('test')
-        } else {
-            deleteCookie('delivery');
-            deleteCookie('order');
-            removeOrderInTable();
-            jQuery('.confirm-order-table').hide();
-        }
-        
+        sendOrder();
     });
 });
