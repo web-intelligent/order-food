@@ -178,12 +178,6 @@
     position: relative;
     top: -1px;
 }
-.order {
-   
-}
-.delivery {
-    
-}
 .product .weight {
     font-weight: bold;
 }
@@ -287,11 +281,11 @@
 }
 /* ползунок скроллбара */
 .products-in-cart::-webkit-scrollbar-thumb {
-    background-color: #f27b2c;
+    background-color: #333;
     border-radius: 9em;
 }
 .products-in-cart::-webkit-scrollbar-thumb:hover {
-    background-color: #b85a1c;
+    background-color: #222;
 }
 .confirm-order-wrapper::-webkit-scrollbar {
     width: 6px; /* ширина для вертикального скролла */
@@ -300,16 +294,16 @@
     border-radius: 9em;
 }
 .confirm-order-wrapper::-webkit-scrollbar-thumb {
-    background-color: #f27b2c;
+    background-color: #333;
     border-radius: 9em;
 }
 .confirm-order-wrapper::-webkit-scrollbar-thumb:hover {
-    background-color: #b85a1c;
+    background-color: #222;
 }
 .remove-product i {
     margin-right:10px;
     cursor: pointer;
-    color: #f27b2c;
+    color: rgb(153, 3, 3);
 }
 .summary i {
     margin-left: 5px;

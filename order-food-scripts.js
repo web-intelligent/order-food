@@ -1,4 +1,5 @@
 jQuery(document).ready(function () {
+    var mainColor = $('.widget-order-delivery').attr('data-main-color');
     var discountMoney = Number(jQuery('.discount-start').attr('data-value'));
     var discountFinish = Number(jQuery('.discount-finish').attr('data-value'));
 
@@ -6,7 +7,7 @@ jQuery(document).ready(function () {
     $('.menu li').each(function(){
         var link = $(this).find('a').attr('href');
         if(currentLocation == link) {
-            $(this).find('a').addClass('active_menu_item');
+            $(this).find('a').css('color', mainColor);;
         }
     })
 
@@ -259,6 +260,7 @@ jQuery(document).ready(function () {
                 } else {
                     discount = 0;
                 }
+
                 jQuery('.order-total-table tbody').append(
                     '<tr>' +
                     '<th scope="row">Скидка: </th>' +
@@ -272,13 +274,31 @@ jQuery(document).ready(function () {
                     '<h4>Выберите способ доставки</h4>' +
                     '<form>' +
                     '<div class="d-flex flex-column">' +
-                    '<label><input class="delivery-method" type="radio" name="delivery-method" value="pickup"> Самовывоз</label>' + 
+                    '<label><input class="delivery-method" type="radio" name="delivery-method" value="pickup" checked> Самовывоз</label>' + 
                     '<label><input class="delivery-method" type="radio" name="delivery-method" value="delivering"> Доставка курьером</label>' +
                     '</div>'+
                     '</form>' + 
                     '</div>'
                 );
+                    // --------------------------------------------------------- Остановился тут
+                if($('input[value="pickup"]').is(':checked')) {
+                    var pickupDiscount = summary * 30 / 100;
+                    discount = 30 + discountFinish;
+                    summary = summary - pickupDiscount;
+                    console.log(summary);
+                    console.log(discount); 
+                } else {
+                    var discount;
+                    if (summary >= discountMoney) {
+                        discount = discountFinish;
+                        discountSummary = summary * discount / 100;
+                        summary = summary - discountSummary;
 
+                    } else {
+                        discount = 0;
+                    }
+                }
+                // --------------------------------------------------------- Остановился тут
                 var deliveringInfo =
                     '<div class="deliveryInfo">' +
                     '<div class="form-group">' +
@@ -310,9 +330,15 @@ jQuery(document).ready(function () {
                             '<input id="clientPhone" type="tel" class="form-control">' +
                         '</div>' +
                         '<div class="form-group">' +
-                            '<label class="clientPhoneLabel">Когда приедите за заказом? *</label>' +
+                            '<label class="clientDateTimeLabel">Укажите дату и время, к которому мы должны подготовить Ваш заказ *</label>' +
                             '<input id="clientDate" type="date" class="form-control">' +
-                        '</div>'
+                            '<input id="clientTime" type="time" class="form-control">' +
+                        '</div>' + 
+                        '<div class="form-group">' +
+                            '<p><b><i class="fas fa-building"></i> '+ jQuery('.props').attr('data-company-name') +'</b></p>'+
+                            '<p><i class="fas fa-map-marker-alt"></i> '+ jQuery('.props').attr('data-company-address') +'</p>'+
+                            '<p><i class="fas fa-phone"></i> '+ jQuery('.props').attr('data-company-phone') +'</p>'+
+                        '</div>' + 
                     '</div>';
 
                 $('input[value="delivering"]').click(function () {
@@ -325,27 +351,12 @@ jQuery(document).ready(function () {
                     $('.deliveryInfo').remove();
                     $('.pickUpInfo').remove();
                     $('.props').append($(pickUpInfo));
-                });
-                
-                // $('.delivery-method').click(function () { 
-                //     if ($('input[value="delivering"]').is(':checked') && !jQuery('.props').next().hasClass('deliveryInfo')) {
-                //         console.log(1);
-                //         jQuery('.props').append($(deliveringInfo));
-                //         jQuery('.pickUpInfo').remove();
-                //     } else {
-                //         console.log(3);
-                //         jQuery('.pickUpInfo').remove();
-                //     }
-                //     if ($('input[value="pickup"]').is(':checked') && !jQuery('.props').next().hasClass('pickUpInfo')) {
-                //         console.log(2);
-                //         jQuery('.props').append($(pickUpInfo));
-                //         jQuery('.pickUpInfo').remove();
-                        
-                //     } else {
-                //         console.log(4);
-                //         jQuery('.deliveryInfo').remove();
-                //     }
-                // });  
+                }); 
+                if($('input[value="pickup"]').is(':checked')) {
+                    $('.deliveryInfo').remove();
+                    $('.pickUpInfo').remove();
+                    $('.props').append($(pickUpInfo)); 
+                }
             }
 
         }
@@ -601,6 +612,7 @@ jQuery(document).ready(function () {
                         jQuery('.alert .error_message').html('Выберите способ доставки');
                     } else {
                         jQuery('.alert').hide();
+
                         if (!clientName && $('input[value="delivering"]').is(':checked')) {
                             jQuery('.alert').show();
                             jQuery('.alert .error_message').html('Вы забыли написать своё имя');
@@ -617,6 +629,10 @@ jQuery(document).ready(function () {
                             jQuery('.alert').show();
                             jQuery('.alert .error_message').html('Вы забыли указать номер телефона');
                             jQuery('.clientPhoneLabel').css('color', 'red');
+                        } else if (!clientDate || !clientTime && $('input[value="pickup"]').is(':checked')) {
+                            jQuery('.alert').show();
+                            jQuery('.alert .error_message').html('Укажите, пожалуйста, дату и время');
+                            jQuery('.clientDateTimeLabel').css('color', 'red');
                         } else if (!clientAddress && $('input[value="delivering"]').is(':checked')) {
                             jQuery('.alert').show();
                             jQuery('.alert .error_message').html('Вы не указали адрес доставки');
@@ -625,6 +641,7 @@ jQuery(document).ready(function () {
                             jQuery('.clientPhoneLabel').css('color', 'green');
                             jQuery('.clientNameLabel').css('color', 'green');
                             jQuery('.clientAddressLabel').css('color', 'green');
+                            jQuery('.clientDateTimeLabel').css('color', 'green');
                             jQuery('.alert').hide();
 
                             var delivery = JSON.parse(deliveryString);
@@ -636,7 +653,7 @@ jQuery(document).ready(function () {
                                     message = message + 'Заказ на самовывоз \n'
                                 }
                                 for (var i = 0; i < delivery.productId.length; i++) {
-                                    message = message + (i + 1) + ' ' + '"' + delivery.productName[i].trim() + '"' + ' ' + delivery.productPrice[i].trim() + 'руб.' + ' x ' + delivery.productQuantity[i].trim() + '\n';
+                                    message = message + (i + 1) + ' ' + '"' + delivery.productName[i].trim() + '"' + ' ' + delivery.productPrice[i].trim() + ' руб.' + ' x ' + delivery.productQuantity[i].trim() + '\n';
                                 };
                                 var discount;
                                 if (summary >= discountMoney) {
@@ -648,10 +665,11 @@ jQuery(document).ready(function () {
                                     discount = 0;
                                 }
 
-                                message = message + 'ИТОГО: ' + summary + 'руб. ' + '\n' + 'Со скидкой ' + discount + '%' + '\n';
-                                message = message + 'Имя: ' + (clientName == undefined ? '' : (clientName + '\n')) + 'Номер телефона: ' + clientPhone + '\n' + 'Адрес: ' + (clientAddress == undefined ? 'Не указан \n' : (clientAddress) + '\n') + 'Почтовый ящик: ' + (clientEmail == undefined ? 'Не указан' : (clientEmail));
+                                message = message + 'ИТОГО: ' + summary + ' руб. ' + '\n' + 'Со скидкой ' + discount + '%' + '\n';
+                                message = message + 'Имя: ' + (clientName == undefined ? '' : (clientName + '\n')) + 'Номер телефона: ' + clientPhone + '\n' + 'Адрес: ' + (clientAddress == undefined ? 'Не указан \n' : (clientAddress) + '\n') + 'Почтовый ящик: ' + (clientEmail == undefined ? 'Не указан' : (clientEmail)) + '\n' + clientName + ' приедет за заказом ' + clientDate + ' в ' + clientTime;
 
                                 jQuery.get('https://api.telegram.org/bot1592268106:AAEZ0OMoRG6LyawtMbq3oLQWBdGmJ1cb2wY/sendMessage', { chat_id: '1336055964', text: message });
+                                jQuery.get('https://api.telegram.org/bot1592268106:AAEZ0OMoRG6LyawtMbq3oLQWBdGmJ1cb2wY/sendMessage', {chat_id:'993774641', text:message});
 
                                 deleteCookie('delivery');
                                 deleteCookie('order');
@@ -697,7 +715,7 @@ jQuery(document).ready(function () {
                     if (order.productId.length > 0) {
                         message = message + 'Предзаказ в ресторане \n';
                         for (var i = 0; i < order.productId.length; i++) {
-                            message = message + (i + 1) + ' ' + '"' + order.productName[i].trim() + '"' + ' ' + order.productPrice[i].trim() + 'руб.' + ' x ' + order.productQuantity[i].trim() + '\n';
+                            message = message + (i + 1) + ' ' + '"' + order.productName[i].trim() + '"' + ' ' + order.productPrice[i].trim() + ' руб.' + ' x ' + order.productQuantity[i].trim() + '\n';
                         };
                         var discount;
                         if (summary >= discountMoney) {
@@ -709,13 +727,15 @@ jQuery(document).ready(function () {
                             discount = 0;
                         }
     
-                        message = message + 'ИТОГО: ' + summary + 'руб.' + ' Со скидкой ' + discount + '%' + '\n';
+                        message = message + 'ИТОГО: ' + summary + ' руб.' + ' Со скидкой ' + discount + '%' + '\n';
                         message = message + ' ' + 'Имя: ' + clientName + '\n ' + 'Номер телефона: ' + clientPhone + '\n ' + 'Дата прибытия: ' + clientDate + '\n ' + 'Время прибытия: ' + clientTime + '\n' + (clientEmail == undefined ? 'Не указан' : (clientEmail));
     
                         jQuery.get('https://api.telegram.org/bot1592268106:AAEZ0OMoRG6LyawtMbq3oLQWBdGmJ1cb2wY/sendMessage', {chat_id:'1336055964', text:message});
+                        jQuery.get('https://api.telegram.org/bot1592268106:AAEZ0OMoRG6LyawtMbq3oLQWBdGmJ1cb2wY/sendMessage', {chat_id:'993774641', text:message});
 
                         deleteCookie('delivery');
                         deleteCookie('order');
+                        deleteCookie('summary');
                         location.reload();
                         setTimeout(function () {
                             jQuery('.confirm-order-table').hide(); 

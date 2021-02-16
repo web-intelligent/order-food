@@ -71,7 +71,7 @@
                     </div>
                 </div>
                 <div class="col-sm-12 col-md-12 col-lg-4">
-                    <form class="props">
+                    <form class="props" data-company-phone='<?= get_option('company-phone', '') ?>' data-company-name='<?= get_option('company-name', '') ?>' data-company-address='<?= get_option('company-address', '') ?>'>
                     </form>
                 </div>
             </div>
@@ -134,12 +134,12 @@
                                 <?php 
                                     if(get_post_meta(get_the_ID(), 'Предзаказ', true) == 1) {
                                 ?>
-                                    <div class="order" style="background: <?= get_option('btn_field', '#f27b2c') ?>">Предзаказ</div>
+                                    <div class="order" style="background: <?= get_option('main-color', '') ?>">Предзаказ</div>
                                 <?php
                                     }
                                     if(get_post_meta(get_the_ID(), 'Доставка', true) == 1) {
                                 ?>
-                                    <div class="delivery" style="background: <?= get_option('btn_field', '#f27b2c') ?>">Доставка</div>
+                                    <div class="delivery" style="background: <?= get_option('main-color', '') ?>">Доставка</div>
                                     
                                 <?php 
                                     }
@@ -157,7 +157,7 @@
                 <div class="col-sm-12 col-md-12 col-lg-3">
                     <aside class="order-sidebar">
                         <h5 class="sidebar-heading">Ваш заказ</h5>
-                        <div class="widget-order-delivery">
+                        <div class="widget-order-delivery" data-main-color="<?= get_option('main-color', '') ?>">
                             <p class="empty-basket">В корзине ничего нет</p>
                             <div style="display:none" class="products-in-cart products-in-cart-order">
                                 <h6 style="display:none" class="widget-title order-title">
@@ -177,7 +177,7 @@
                         </div>
                         <div class="widget">
                             <div class="discount-wrapper">
-                                <div class="discount-bg"></div>
+                                <div style="background: <?= get_option('main-color', '') ?> " class="discount-bg"></div>
                             </div>
                             <p class="discount-start" data-value="<?= get_option('discount_field_limit', 3000); ?>">До скидки осталось: <span class="discount-money"><?= get_option('discount_field_limit', 3000); ?></span> <i class="fas fa-ruble-sign"></i></p>
                             <p style="display:none;" class="discount-finish" data-value="<?= get_option('discount_field', 10); ?>">Ваша скидка <?= get_option('discount_field', 10); ?>%</p>

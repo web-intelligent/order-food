@@ -89,12 +89,30 @@ function order_food_settings_function() {
 add_action('admin_init', 'setup_order_food_settings');
 function setup_order_food_settings(){
 	add_settings_section('order_food_settings', 'Настройки', '', 'settings');
+
 	add_settings_field('discount_field', 'Размер скидки', 'discount_field_show', 'settings', 'order_food_settings');
 	add_settings_field('discount_field_limit', 'Минимальная сумма покупкии для скидки', 'discount_field_limit_show', 'settings', 'order_food_settings');
-	add_settings_field('btn-color', 'Цвет кнопок', 'btn_field_show', 'settings', 'order_food_settings');
+	add_settings_field('main-color', 'Основной цвет', 'btn_field_show', 'settings', 'order_food_settings');
+	add_settings_field('company-name', 'Наименование компании', 'company_name_show', 'settings', 'order_food_settings');
+	add_settings_field('company-address', 'Адрес компании', 'company_address_show', 'settings', 'order_food_settings');
+	add_settings_field('company-phone', 'Телефон компании', 'company_phone_show', 'settings', 'order_food_settings');
+	
 	register_setting('order_food_settings', 'discount_field');
 	register_setting('order_food_settings', 'discount_field_limit');
-	register_setting('order_food_settings', 'btn-color');
+	register_setting('order_food_settings', 'main-color');
+	register_setting('order_food_settings', 'company-name', 'data_validation');
+	register_setting('order_food_settings', 'company-address', 'data_validation');
+	register_setting('order_food_settings', 'company-phone', 'data_validation');
+
+	function data_validation($data) {
+		// foreach ($data as $key => $value) {
+		// 	//$result[$key] = htmlspecialchars($value);
+			
+		// }
+		return '33';
+
+		//return $result;
+	}
 }
 
 function discount_field_show() {
@@ -104,7 +122,16 @@ function discount_field_limit_show() {
 	echo '<input name="discount_field_limit" type="text" value="'. get_option('discount_field_limit', 3000) .'"> рублей';
 }
 function btn_field_show() {
-	echo '<input name="btn_field" type="color" value="'. get_option('btn_field', '#f27b2c') .'">';
+	echo '<input name="main-color" type="color" value="'. get_option('main-color', '') .'">';
+}
+function company_name_show() {
+	echo '<input name="company-name" placeholder="Имя компании" type="text" value=\''. get_option('company-name', '') .'\'>';
+}
+function company_address_show() {
+	echo '<input name="company-address" placeholder="Адрес компании" type="text" value=\''. get_option('company-address', '') .'\'>';
+}
+function company_phone_show() {
+	echo '<input name="company-phone" placeholder="+7 (000) 000-00-00 " type="text" value=\''. get_option('company-phone', '') .'\'>';
 }
 
 add_action('add_meta_boxes', 'add_meta_box_order_food');
