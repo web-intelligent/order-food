@@ -251,54 +251,58 @@ jQuery(document).ready(function () {
                         '<td>' + delivery.productQuantity[i] + '</td>' +
                         '</tr>');
                 };
-                var discount;
-                if (summary >= discountMoney) {
-                    discount = discountFinish;
-                    discountSummary = summary * discount / 100;
-                    summary = summary - discountSummary;
 
-                } else {
-                    discount = 0;
-                }
-
-                jQuery('.order-total-table tbody').append(
-                    '<tr>' +
-                    '<th scope="row">Скидка: </th>' +
-                    '<td>' + discount + '%</td>' +
-                    '<td colspan="1"><b>Итого: </b></td>' +
-                    '<td>' + summary + ' <i class="fas fa-ruble-sign"></i></td>' +
-                    '</tr>'
-                );
                 jQuery('.delivery-methods').append(
-                    '<div class="delivering-methods">' + 
+                    '<div class="delivering-methods">' +
                     '<h4>Выберите способ доставки</h4>' +
                     '<form>' +
                     '<div class="d-flex flex-column">' +
-                    '<label><input class="delivery-method" type="radio" name="delivery-method" value="pickup" checked> Самовывоз</label>' + 
+                    '<label><input class="delivery-method" type="radio" name="delivery-method" value="pickup"> Самовывоз</label>' +
                     '<label><input class="delivery-method" type="radio" name="delivery-method" value="delivering"> Доставка курьером</label>' +
-                    '</div>'+
-                    '</form>' + 
+                    '</div>' +
+                    '</form>' +
                     '</div>'
                 );
-                    // --------------------------------------------------------- Остановился тут
-                if($('input[value="pickup"]').is(':checked')) {
-                    var pickupDiscount = summary * 30 / 100;
-                    discount = 30 + discountFinish;
-                    summary = summary - pickupDiscount;
-                    console.log(summary);
-                    console.log(discount); 
-                } else {
-                    var discount;
-                    if (summary >= discountMoney) {
-                        discount = discountFinish;
-                        discountSummary = summary * discount / 100;
-                        summary = summary - discountSummary;
+                
+                var discount = 0;
+                var enteringSummary = 0;
+                //enteringSummary = enteringSummary + summary;
 
-                    } else {
-                        discount = 0;
+                $('input[value="pickup"]').click(function () { 
+                    if (enteringSummary >= discountMoney) {
+                        console.log(1);
+                    } 
+                    if (enteringSummary >= discountMoney && $('input[value="pickup"]').is(':checked')) {
+                        console.log(2);
                     }
-                }
-                // --------------------------------------------------------- Остановился тут
+                    if (enteringSummary < discountMoney && $('input[value="pickup"]').is(':checked')) {
+                        console.log(3);
+                    }
+
+                    console.log(summary);
+                    console.log(enteringSummary);
+                    console.log(discount);
+                    
+                });
+
+                // var discount;
+                // if (summary >= discountMoney) {
+                //     discount = discountFinish;
+                //     discountSummary = summary * discount / 100;
+                //     summary = summary - discountSummary;
+                // } else {
+                //     discount = 0;
+                // }
+
+                // jQuery('.order-total-table tbody').append(
+                //     '<tr class="totalPayRow">' +
+                //     '<th scope="row">Скидка: </th>' +
+                //     '<td>' + discount + '%</td>' +
+                //     '<td colspan="1"><b>Итого: </b></td>' +
+                //     '<td>' + summary + ' <i class="fas fa-ruble-sign"></i></td>' +
+                //     '</tr>'
+                // );
+   
                 var deliveringInfo =
                     '<div class="deliveryInfo">' +
                     '<div class="form-group">' +
