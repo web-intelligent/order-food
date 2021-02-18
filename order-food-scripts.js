@@ -2,6 +2,7 @@ jQuery(document).ready(function () {
     var mainColor = $('.widget-order-delivery').attr('data-main-color');
     var discountMoney = Number(jQuery('.discount-start').attr('data-value'));
     var discountFinish = Number(jQuery('.discount-finish').attr('data-value'));
+    var pickUpDiscount = Number(jQuery('.discountPickup').attr('data-value'));
 
     var currentLocation = jQuery(location).attr('href');
     $('.menu li').each(function(){
@@ -234,6 +235,110 @@ jQuery(document).ready(function () {
     }
     deleteOrder();
 
+    // ---------------------------------------- Функция расчёта скидки
+    function countTotalDiscount() {
+        var discount = 0;
+
+        if (summary >= discountMoney) {
+            discount = discountFinish;
+            discountSummary = summary * discount / 100;
+            summary = summary - discountSummary;
+
+            jQuery('.order-total-table tbody .totalPayRow').remove();
+
+            jQuery('.order-total-table tbody').append(
+                '<tr class="totalPayRow">' +
+                '<th scope="row">Скидка: </th>' +
+                '<td>' + discount + '%</td>' +
+                '<td colspan="1"><b>Итого: </b></td>' +
+                '<td>' + summary + ' <i class="fas fa-ruble-sign"></i></td>' +
+                '</tr>'
+            );
+        } else {
+            discount = 0;
+        }
+
+        $('input[value="pickup"]').click(function () {
+            summary = getCookie('summary');
+            if (summary >= discountMoney && $('input[value="pickup"]').is(':checked')) {
+                discount = pickUpDiscount + discountFinish;
+                discountSummary = summary * discount / 100;
+                summary = summary - discountSummary;
+                jQuery('.order-total-table tbody .totalPayRow').remove();
+
+                jQuery('.order-total-table tbody').append(
+                    '<tr class="totalPayRow">' +
+                    '<th scope="row">Скидка: </th>' +
+                    '<td>' + discount + '%</td>' +
+                    '<td colspan="1"><b>Итого: </b></td>' +
+                    '<td>' + summary + ' <i class="fas fa-ruble-sign"></i></td>' +
+                    '</tr>'
+                );
+            } else if (summary < discountMoney && $('input[value="pickup"]').is(':checked')) {
+                summary = getCookie('summary');
+                discount = pickUpDiscount;
+                discountSummary = summary * discount / 100;
+                summary = summary - discountSummary;
+                jQuery('.order-total-table tbody .totalPayRow').remove();
+
+                jQuery('.order-total-table tbody').append(
+                    '<tr class="totalPayRow">' +
+                    '<th scope="row">Скидка: </th>' +
+                    '<td>' + discount + '%</td>' +
+                    '<td colspan="1"><b>Итого: </b></td>' +
+                    '<td>' + summary + ' <i class="fas fa-ruble-sign"></i></td>' +
+                    '</tr>'
+                );
+            } else {
+                discount = 0;
+                jQuery('.order-total-table tbody .totalPayRow').remove();
+
+                jQuery('.order-total-table tbody').append(
+                    '<tr class="totalPayRow">' +
+                    '<th scope="row">Скидка: </th>' +
+                    '<td>' + discount + '%</td>' +
+                    '<td colspan="1"><b>Итого: </b></td>' +
+                    '<td>' + summary + ' <i class="fas fa-ruble-sign"></i></td>' +
+                    '</tr>'
+                );
+            }
+
+            $('input[value="delivering"]').click(function () {
+                summary = getCookie('summary');
+                if (summary >= discountMoney) {
+                    discount = discountFinish;
+                    discountSummary = summary * discount / 100;
+                    summary = summary - discountSummary;
+
+                    jQuery('.order-total-table tbody .totalPayRow').remove();
+
+                    jQuery('.order-total-table tbody').append(
+                        '<tr class="totalPayRow">' +
+                        '<th scope="row">Скидка: </th>' +
+                        '<td>' + discount + '%</td>' +
+                        '<td colspan="1"><b>Итого: </b></td>' +
+                        '<td>' + summary + ' <i class="fas fa-ruble-sign"></i></td>' +
+                        '</tr>'
+                    );
+                } else {
+                    discount = 0;
+                    jQuery('.order-total-table tbody .totalPayRow').remove();
+
+                    jQuery('.order-total-table tbody').append(
+                        '<tr class="totalPayRow">' +
+                        '<th scope="row">Скидка: </th>' +
+                        '<td>' + discount + '%</td>' +
+                        '<td colspan="1"><b>Итого: </b></td>' +
+                        '<td>' + summary + ' <i class="fas fa-ruble-sign"></i></td>' +
+                        '</tr>'
+                    );
+                }
+            });
+
+        });
+    }
+    // ------------------------------------------- Конец функции расчёта ссылки
+
     function loadOrderInTable() {
         var deliveryString = getCookie('delivery');
         var orderString = getCookie('order');
@@ -264,126 +369,7 @@ jQuery(document).ready(function () {
                     '</div>'
                 );
                 
-                var discount = 0;
-                var pickUpDiscount = 30;
-
-                if(summary >= discountMoney) {
-                    discount = discountFinish;
-                    discountSummary = summary * discount / 100;
-                    summary = summary - discountSummary;
-
-                    jQuery('.order-total-table tbody .totalPayRow').remove();
-
-                    jQuery('.order-total-table tbody').append(
-                        '<tr class="totalPayRow">' +
-                        '<th scope="row">Скидка: </th>' +
-                        '<td>' + discount + '%</td>' +
-                        '<td colspan="1"><b>Итого: </b></td>' +
-                        '<td>' + summary + ' <i class="fas fa-ruble-sign"></i></td>' +
-                        '</tr>'
-                    );
-                } else {
-                    discount = 0;
-                }
-
-                $('input[value="pickup"]').click(function () { 
-                    summary = getCookie('summary');
-                    if (summary >= discountMoney && $('input[value="pickup"]').is(':checked')) {
-                        discount = pickUpDiscount + discountFinish;
-                        discountSummary = summary * discount / 100;
-                        summary = summary - discountSummary;
-                        jQuery('.order-total-table tbody .totalPayRow').remove();
-
-                        jQuery('.order-total-table tbody').append(
-                            '<tr class="totalPayRow">' +
-                            '<th scope="row">Скидка: </th>' +
-                            '<td>' + discount + '%</td>' +
-                            '<td colspan="1"><b>Итого: </b></td>' +
-                            '<td>' + summary + ' <i class="fas fa-ruble-sign"></i></td>' +
-                            '</tr>'
-                        );
-                    } else if (summary < discountMoney && $('input[value="pickup"]').is(':checked')) {
-                        summary = getCookie('summary');
-                        discount = pickUpDiscount;
-                        discountSummary = summary * discount / 100;
-                        summary = summary - discountSummary;
-                        jQuery('.order-total-table tbody .totalPayRow').remove();
-
-                        jQuery('.order-total-table tbody').append(
-                            '<tr class="totalPayRow">' +
-                            '<th scope="row">Скидка: </th>' +
-                            '<td>' + discount + '%</td>' +
-                            '<td colspan="1"><b>Итого: </b></td>' +
-                            '<td>' + summary + ' <i class="fas fa-ruble-sign"></i></td>' +
-                            '</tr>'
-                        );
-                    } else {
-                        discount = 0;
-                        jQuery('.order-total-table tbody .totalPayRow').remove();
-
-                        jQuery('.order-total-table tbody').append(
-                            '<tr class="totalPayRow">' +
-                            '<th scope="row">Скидка: </th>' +
-                            '<td>' + discount + '%</td>' +
-                            '<td colspan="1"><b>Итого: </b></td>' +
-                            '<td>' + summary + ' <i class="fas fa-ruble-sign"></i></td>' +
-                            '</tr>'
-                        );
-                    }
-
-                    $('input[value="delivering"]').click(function () { 
-                        summary = getCookie('summary');
-                        if (summary >= discountMoney) {
-                            discount = discountFinish;
-                            discountSummary = summary * discount / 100;
-                            summary = summary - discountSummary;
-
-                            jQuery('.order-total-table tbody .totalPayRow').remove();
-
-                            jQuery('.order-total-table tbody').append(
-                                '<tr class="totalPayRow">' +
-                                '<th scope="row">Скидка: </th>' +
-                                '<td>' + discount + '%</td>' +
-                                '<td colspan="1"><b>Итого: </b></td>' +
-                                '<td>' + summary + ' <i class="fas fa-ruble-sign"></i></td>' +
-                                '</tr>'
-                            );
-                        } else {
-                            discount = 0;
-                            jQuery('.order-total-table tbody .totalPayRow').remove();
-
-                            jQuery('.order-total-table tbody').append(
-                                '<tr class="totalPayRow">' +
-                                '<th scope="row">Скидка: </th>' +
-                                '<td>' + discount + '%</td>' +
-                                '<td colspan="1"><b>Итого: </b></td>' +
-                                '<td>' + summary + ' <i class="fas fa-ruble-sign"></i></td>' +
-                                '</tr>'
-                            );
-                        }
-                    });
-                    console.log(summary);
-                    console.log(discount);
-                    
-                });
-
-                // var discount;
-                // if (summary >= discountMoney) {
-                //     discount = discountFinish;
-                //     discountSummary = summary * discount / 100;
-                //     summary = summary - discountSummary;
-                // } else {
-                //     discount = 0;
-                // }
-
-                // jQuery('.order-total-table tbody').append(
-                //     '<tr class="totalPayRow">' +
-                //     '<th scope="row">Скидка: </th>' +
-                //     '<td>' + discount + '%</td>' +
-                //     '<td colspan="1"><b>Итого: </b></td>' +
-                //     '<td>' + summary + ' <i class="fas fa-ruble-sign"></i></td>' +
-                //     '</tr>'
-                // );
+                countTotalDiscount();
    
                 var deliveringInfo =
                     '<div class="deliveryInfo">' +
@@ -741,15 +727,29 @@ jQuery(document).ready(function () {
                                 for (var i = 0; i < delivery.productId.length; i++) {
                                     message = message + (i + 1) + ' ' + '"' + delivery.productName[i].trim() + '"' + ' ' + delivery.productPrice[i].trim() + ' руб.' + ' x ' + delivery.productQuantity[i].trim() + '\n';
                                 };
-                                var discount;
+                                var discount = 0;
                                 if (summary >= discountMoney) {
                                     discount = discountFinish;
                                     discountSummary = summary * discount / 100;
                                     summary = summary - discountSummary;
 
-                                } else {
+                                } else if ($('input[value="pickup"]').is(':checked') && summary >= discountMoney) {
+                                    discount = discountFinish + pickUpDiscount;
+                                    discountSummary = summary * discount / 100;
+                                    summary = summary - discountSummary;
+
+                                } else if ($('input[value="pickup"]').is(':checked') && summary < discountMoney) {
+                                    discount = pickUpDiscount;
+                                    discountSummary = summary * discount / 100;
+                                    summary = summary - discountSummary;
+                                } else  {
                                     discount = 0;
+                                    summary = getCookie('summary');
                                 }
+
+                                
+
+                                
 
                                 message = message + 'ИТОГО: ' + summary + ' руб. ' + '\n' + 'Со скидкой ' + discount + '%' + '\n';
                                 message = message + 'Имя: ' + (clientName == undefined ? '' : (clientName + '\n')) + 'Номер телефона: ' + clientPhone + '\n' + 'Адрес: ' + (clientAddress == undefined ? 'Не указан \n' : (clientAddress) + '\n') + 'Почтовый ящик: ' + (clientEmail == undefined ? 'Не указан' : (clientEmail)) + '\n' + clientName + ' приедет за заказом ' + clientDate + ' в ' + clientTime;
@@ -803,15 +803,17 @@ jQuery(document).ready(function () {
                         for (var i = 0; i < order.productId.length; i++) {
                             message = message + (i + 1) + ' ' + '"' + order.productName[i].trim() + '"' + ' ' + order.productPrice[i].trim() + ' руб.' + ' x ' + order.productQuantity[i].trim() + '\n';
                         };
-                        var discount;
-                        if (summary >= discountMoney) {
-                            discount = discountFinish;
-                            discountSummary = summary * discount / 100;
-                            summary = summary - discountSummary;
+                        // var discount;
+                        // if (summary >= discountMoney) {
+                        //     discount = discountFinish;
+                        //     discountSummary = summary * discount / 100;
+                        //     summary = summary - discountSummary;
     
-                        } else {
-                            discount = 0;
-                        }
+                        // } else {
+                        //     discount = 0;
+                        // }
+
+                        countTotalDiscount();
     
                         message = message + 'ИТОГО: ' + summary + ' руб.' + ' Со скидкой ' + discount + '%' + '\n';
                         message = message + ' ' + 'Имя: ' + clientName + '\n ' + 'Номер телефона: ' + clientPhone + '\n ' + 'Дата прибытия: ' + clientDate + '\n ' + 'Время прибытия: ' + clientTime + '\n' + (clientEmail == undefined ? 'Не указан' : (clientEmail));

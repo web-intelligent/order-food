@@ -92,6 +92,7 @@ function setup_order_food_settings(){
 
 	add_settings_field('discount_field', 'Размер скидки', 'discount_field_show', 'settings', 'order_food_settings');
 	add_settings_field('discount_field_limit', 'Минимальная сумма покупкии для скидки', 'discount_field_limit_show', 'settings', 'order_food_settings');
+	add_settings_field('discount_pickup', 'Размер скидки при самовывозе', 'discount_pickup_show', 'settings', 'order_food_settings');
 	add_settings_field('main-color', 'Основной цвет', 'btn_field_show', 'settings', 'order_food_settings');
 	add_settings_field('company-name', 'Наименование компании', 'company_name_show', 'settings', 'order_food_settings');
 	add_settings_field('company-address', 'Адрес компании', 'company_address_show', 'settings', 'order_food_settings');
@@ -99,6 +100,7 @@ function setup_order_food_settings(){
 	
 	register_setting('order_food_settings', 'discount_field');
 	register_setting('order_food_settings', 'discount_field_limit');
+	register_setting('order_food_settings', 'discount_pickup');
 	register_setting('order_food_settings', 'main-color');
 	register_setting('order_food_settings', 'company-name', 'data_validation');
 	register_setting('order_food_settings', 'company-address', 'data_validation');
@@ -120,6 +122,9 @@ function discount_field_show() {
 }
 function discount_field_limit_show() {
 	echo '<input name="discount_field_limit" type="text" value="'. get_option('discount_field_limit', 3000) .'"> рублей';
+}
+function discount_pickup_show() {
+	echo '<input name="discount_pickup" type="text" value="'. get_option('discount_pickup', 30) .'"> %';
 }
 function btn_field_show() {
 	echo '<input name="main-color" type="color" value="'. get_option('main-color', '') .'">';
