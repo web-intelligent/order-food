@@ -746,10 +746,8 @@ jQuery(document).ready(function () {
                                     discount = 0;
                                     summary = getCookie('summary');
                                 }
-
                                 
 
-                                
 
                                 message = message + 'ИТОГО: ' + summary + ' руб. ' + '\n' + 'Со скидкой ' + discount + '%' + '\n';
                                 message = message + 'Имя: ' + (clientName == undefined ? '' : (clientName + '\n')) + 'Номер телефона: ' + clientPhone + '\n' + 'Адрес: ' + (clientAddress == undefined ? 'Не указан \n' : (clientAddress) + '\n') + 'Почтовый ящик: ' + (clientEmail == undefined ? 'Не указан' : (clientEmail)) + '\n' + clientName + ' приедет за заказом ' + clientDate + ' в ' + clientTime;
@@ -760,10 +758,15 @@ jQuery(document).ready(function () {
                                 deleteCookie('delivery');
                                 deleteCookie('order');
                                 deleteCookie('summary');
-                                location.reload();
-                                setTimeout(function () {
+                                $('.message-for-user').show();
+                                $('.confirm-message-for-user').click(function(){
+
+                                    location.reload();
                                     jQuery('.confirm-order-table').hide();
-                                }, 4000)
+                                    $('.message-for-user').hide();
+                                    
+                                });
+                                
                             }
                         }
                     }
@@ -803,17 +806,15 @@ jQuery(document).ready(function () {
                         for (var i = 0; i < order.productId.length; i++) {
                             message = message + (i + 1) + ' ' + '"' + order.productName[i].trim() + '"' + ' ' + order.productPrice[i].trim() + ' руб.' + ' x ' + order.productQuantity[i].trim() + '\n';
                         };
-                        // var discount;
-                        // if (summary >= discountMoney) {
-                        //     discount = discountFinish;
-                        //     discountSummary = summary * discount / 100;
-                        //     summary = summary - discountSummary;
+                        var discount;
+                        if (summary >= discountMoney) {
+                            discount = discountFinish;
+                            discountSummary = summary * discount / 100;
+                            summary = summary - discountSummary;
     
-                        // } else {
-                        //     discount = 0;
-                        // }
-
-                        countTotalDiscount();
+                        } else {
+                            discount = 0;
+                        }
     
                         message = message + 'ИТОГО: ' + summary + ' руб.' + ' Со скидкой ' + discount + '%' + '\n';
                         message = message + ' ' + 'Имя: ' + clientName + '\n ' + 'Номер телефона: ' + clientPhone + '\n ' + 'Дата прибытия: ' + clientDate + '\n ' + 'Время прибытия: ' + clientTime + '\n' + (clientEmail == undefined ? 'Не указан' : (clientEmail));
@@ -824,10 +825,14 @@ jQuery(document).ready(function () {
                         deleteCookie('delivery');
                         deleteCookie('order');
                         deleteCookie('summary');
-                        location.reload();
-                        setTimeout(function () {
-                            jQuery('.confirm-order-table').hide(); 
-                        }, 4000)
+                        $('.message-for-user').show();
+                        $('.confirm-message-for-user').click(function () {
+
+                            location.reload();
+                            jQuery('.confirm-order-table').hide();
+                            $('.message-for-user').hide();
+
+                        });
                         
                     }
                 }

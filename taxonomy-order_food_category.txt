@@ -14,6 +14,15 @@
 <?php 
 get_header();
 ?>
+<div class="message-for-user" style="display:none;">
+    <div class="message-for-user-body">
+        <h4>Ваш заказ принят!</h4>
+        <p>Мы свяжемся с Вами в ближайшее время, чтобы уточнить заказ.</p>
+        <div class="message-for-user-buttons">
+            <input class="confirm-message-for-user" type="button" value="Ок">
+        </div>
+    </div>
+</div>
 <div class="overlay">
     <div class="pop-up">
         <i class="fas fa-times"></i>
@@ -177,11 +186,11 @@ get_header();
             </div>
         </div>
     <?php get_footer();?>
-	<aside class="order-sidebar-mobile">
+	<aside class="order-sidebar-mobile" style="background: <?= get_option('main-color', '') ?>">
             <svg version="1.1" id="discount-circle" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100;" xml:space="preserve">
             <style type="text/css">
             .st0{fill:none;stroke:#000000;stroke-width:5;stroke-opacity:0.2;}
-            .st1{fill:none;stroke:#f27b2c;stroke-width:5;stroke-linecap:round}
+            .st1{fill:none;stroke:<?= get_option('main-color', '') ?>;stroke-width:5;stroke-linecap:round}
             </style>
             <ellipse class="st1" cx="50.17" cy="50.17" rx="47.73" ry="47.73" stroke-miterlimit="0" stroke-dashoffset="310" stroke-dasharray="310"/>
             <circle class="st0" cx="50.17" cy="50.17" r="47.73" />
