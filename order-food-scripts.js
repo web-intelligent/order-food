@@ -374,6 +374,9 @@ jQuery(document).ready(function () {
                 var deliveringInfo =
                     '<div class="deliveryInfo">' +
                     '<div class="form-group">' +
+                    '<b>Внимание!</b> Доставка курьером осуществляется с 11:00' +
+                    '</div>' +
+                    '<div class="form-group">' +
                     '<label class="clientNameLabel">Ваше имя *</label>' +
                     '<input id="clientName" type="text" class="form-control">' +
                     '</div>' +
@@ -403,7 +406,7 @@ jQuery(document).ready(function () {
                         '</div>' +
                         '<div class="form-group">' +
                             '<label class="clientDateTimeLabel">Укажите дату и время, к которому мы должны подготовить Ваш заказ *</label>' +
-                            '<input id="clientDate" type="date" class="form-control">' +
+                            '<input id="clientDate" type="date" class="form-control"><br>' +
                             '<input id="clientTime" type="time" class="form-control">' +
                         '</div>' + 
                         '<div class="form-group">' +

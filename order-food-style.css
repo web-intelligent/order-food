@@ -6,22 +6,25 @@
     position: fixed;
     top: 0;
     left: 0;
-    background: rgba(255, 255, 255, 1);
+    background: #fff;
     display: flex;
     justify-content: center;
-    align-items: center;
+    /* align-items: center; */
     width: 100%;
     height: 100%;
     display: none;
     z-index: 6000;
+    padding: 20px 0;
 }
 .confirm-order-wrapper {
-    margin: 100px auto;
+    /* margin: 100px auto; */
     border-radius: 5px;
     overflow-y: scroll;
     height: auto;
-    max-height: 60%;
-    width: 80vw;
+    max-height: 100%;
+    width: 100%;
+    padding:20px;
+    background: #fff;
 }
 
 .widget {
@@ -418,6 +421,9 @@
     padding:20px;
     border-radius: 5px;
     background: #fff;
+}
+#pay-order {
+    margin-bottom: 15px;
 }
 
 /* MEDIA */
