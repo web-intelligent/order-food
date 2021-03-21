@@ -385,6 +385,11 @@ jQuery(document).ready(function () {
                     '<input id="clientPhone" type="tel" class="form-control">' +
                     '</div>' +
                     '<div class="form-group">' +
+                        '<label class="clientDateTimeLabel">Укажите дату и время, к которому мы должны подготовить Ваш заказ *</label>' +
+                        '<input id="clientDate" type="date" class="form-control"><br>' +
+                        '<input id="clientTime" type="time" class="form-control">' +
+                    '</div>' + 
+                    '<div class="form-group">' +
                     '<label class="clientAddressLabel">Адрес доставки заказа *</label>' +
                     '<input id="clientAddress" type="text" class="form-control">' +
                     '</div>' +
@@ -667,6 +672,7 @@ jQuery(document).ready(function () {
     jQuery('.alert').hide();
 
     function sendOrder() {
+        console.log('test');
         var deliveryString = getCookie('delivery');
         var orderString = getCookie('order');
         summary = getCookie('summary');
@@ -704,9 +710,9 @@ jQuery(document).ready(function () {
                             jQuery('.alert').show();
                             jQuery('.alert .error_message').html('Вы забыли указать номер телефона');
                             jQuery('.clientPhoneLabel').css('color', 'red');
-                        } else if (!clientDate || !clientTime && $('input[value="pickup"]').is(':checked')) {
+                        } else if (!clientDate && $('input[value="pickup"]') || !clientTime && $('input[value="pickup"]').is(':checked')) {
                             jQuery('.alert').show();
-                            jQuery('.alert .error_message').html('Укажите, пожалуйста, дату и время');
+                            jQuery('.alert .error_message').html('Укажите дату и время');
                             jQuery('.clientDateTimeLabel').css('color', 'red');
                         } else if (!clientAddress && $('input[value="delivering"]').is(':checked')) {
                             jQuery('.alert').show();
